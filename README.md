@@ -1,2 +1,1 @@
-# ScaleResfusion
-Official Paper Implementation of ScaleResfusion: Residual Rectified Flow Based on Residual Vector Field
+Our paper is under review, and we plan to release some of the reasoning results, code, and weights around mid-August.
