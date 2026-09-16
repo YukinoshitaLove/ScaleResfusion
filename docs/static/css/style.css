@@ -32,7 +32,6 @@ h1.title .sub { display: block; font-size: 1.35rem; font-weight: 500; color: var
 .authors sup, .affils sup { font-size: 0.7em; }
 .affils { color: var(--muted); }
 .notes { color: var(--muted); font-size: 0.92rem; }
-.venue { margin-top: 12px; font-weight: 600; color: var(--accent); }
 .buttons { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin: 26px 0 10px; }
 .btn {
   display: inline-flex; align-items: center; gap: 8px;
