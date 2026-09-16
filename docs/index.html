@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ScaleResfusion: Residual Rectified Flow based on Residual Vector Field</title>
+  <meta name="description" content="ScaleResfusion adapts pre-trained rectified-flow models (SD3, FLUX.2, Z-Image) to real-world image restoration with Residual Rectified Flow, LoRA-only training and 4 sampling steps.">
+  <meta property="og:title" content="ScaleResfusion: Residual Rectified Flow based on Residual Vector Field">
+  <meta property="og:description" content="Residual Rectified Flow for real-world image super-resolution: start from the noisy LQ image, fit only the residual vector field with LoRA, restore in 4 steps.">
+  <meta property="og:image" content="https://yukinoshitalove.github.io/ScaleResfusion/static/images/teaser.jpg">
+  <meta property="og:url" content="https://yukinoshitalove.github.io/ScaleResfusion/">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="stylesheet" href="static/css/style.css">
+</head>
+<body>
+
+<header class="hero">
+  <div class="container">
+    <h1 class="title">ScaleResfusion<span class="sub">Residual Rectified Flow based on Residual Vector Field</span></h1>
+
+    <div class="authors">
+      <a href="https://yukinoshitalove.github.io/" target="_blank" rel="noopener">Zhenning Shi</a><sup>1,*</sup>,
+      Chen Xu<sup>2,*</sup>,
+      Junhao Zhang<sup>3</sup>,
+      Kefei Zhang<sup>1</sup>,
+      Linjie Liu<sup>4</sup>,
+      <a href="https://www.zdzheng.xyz/" target="_blank" rel="noopener">Zhedong Zheng</a><sup>2,&dagger;</sup>,
+      Tao Li<sup>1,&dagger;</sup>
+    </div>
+    <div class="affils">
+      <sup>1</sup>Nankai University &nbsp;&middot;&nbsp;
+      <sup>2</sup>University of Macau &nbsp;&middot;&nbsp;
+      <sup>3</sup>CSIRO Data61 &nbsp;&middot;&nbsp;
+      <sup>4</sup>Beihang University
+    </div>
+    <div class="notes"><sup>*</sup>Equal contribution &nbsp;&nbsp; <sup>&dagger;</sup>Corresponding authors</div>
+    <div class="venue">arXiv 2026</div>
+
+    <div class="buttons">
+      <a class="btn" href="https://arxiv.org/abs/2607.25275" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24"><path d="M6 2h9l5 5v15a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1zm8 1.5V8h4.5L14 3.5zM8 12h8v1.5H8V12zm0 3.5h8V17H8v-1.5zM8 8.5h4V10H8V8.5z"/></svg>
+        arXiv
+      </a>
+      <a class="btn" href="https://arxiv.org/pdf/2607.25275" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24"><path d="M5 3h9l5 5v13a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zm8 1.5V9h4.5L13 4.5zM7 12v6h1.5v-2H10a2 2 0 0 0 0-4H7zm1.5 1.5H10a.5.5 0 0 1 0 1H8.5v-1zM11.5 12v6H14a3 3 0 0 0 0-6h-2.5zm1.5 1.5h1a1.5 1.5 0 0 1 0 3h-1v-3zM17.5 12v6H19v-2.2h1.5v-1.5H19v-.8h2V12h-3.5z"/></svg>
+        Paper
+      </a>
+      <a class="btn" href="https://github.com/YukinoshitaLove/ScaleResfusion" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24"><path d="M12 .5A11.5 11.5 0 0 0 .5 12a11.5 11.5 0 0 0 7.86 10.92c.58.1.79-.25.79-.56v-2.1c-3.2.7-3.87-1.36-3.87-1.36-.52-1.33-1.28-1.69-1.28-1.69-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.19 1.76 1.19 1.03 1.76 2.7 1.25 3.35.96.1-.75.4-1.25.73-1.54-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.29 1.18-3.09-.12-.29-.51-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.78 0c2.2-1.49 3.16-1.18 3.16-1.18.63 1.59.24 2.76.12 3.05.74.8 1.18 1.83 1.18 3.09 0 4.42-2.7 5.4-5.26 5.68.41.36.78 1.06.78 2.14v3.17c0 .31.2.67.8.56A11.5 11.5 0 0 0 23.5 12 11.5 11.5 0 0 0 12 .5z"/></svg>
+        Code
+      </a>
+      <a class="btn" href="https://mailnankaieducn-my.sharepoint.com/:v:/g/personal/shizhenning_mail_nankai_edu_cn/IQBoy3T-p6qTSLhhpoZn3KyFAaJA3kvdiBXgoGy2aa1AcQ8?e=GmWi7q" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm-2 14.5v-9l7 4.5-7 4.5z"/></svg>
+        Video
+      </a>
+      <span class="btn disabled" aria-disabled="true" title="Pretrained LoRA weights will be released soon">
+        <svg viewBox="0 0 24 24"><path d="M12 3v10.17l3.59-3.58L17 11l-5 5-5-5 1.41-1.41L12 13.17V3zM5 19h14v2H5v-2z"/></svg>
+        Weights (coming soon)
+      </span>
+    </div>
+  </div>
+</header>
+
+<main class="container">
+
+  <figure>
+    <img src="static/images/teaser.jpg" alt="Real-world low-quality inputs (top) and ScaleResfusion restorations (bottom)">
+    <figcaption>Top: real-world low-quality inputs. Bottom: ScaleResfusion restorations with the FLUX.2-klein-4B backbone and only 4 sampling steps.</figcaption>
+  </figure>
+
+  <!-- ===================== Abstract ===================== -->
+  <section id="abstract">
+    <h2>Abstract</h2>
+    <div class="card abstract">
+      <p>
+        Real-world Image Restoration (Real-IR) aims to recover high-quality (HQ) images from complex and unknown degradations. Recent diffusion-based methods have substantially improved perceptual quality, yet two obstacles remain: methods that sample from Gaussian noise require many steps and are often less faithful to the degraded input, whereas residual-based methods that start from the low-quality (LQ) image typically train task-specific models from scratch, with optimization objectives coupled to a particular noise scheduler, and therefore cannot reuse modern pre-trained generative priors.
+      </p>
+      <p>
+        We present <b>ScaleResfusion</b>, which rewrites residual restoration as a scheduler-independent adaptation interface for pre-trained text-to-image rectified-flow models. Its core, <b>Residual Rectified Flow</b> (RRF), inserts the residual term <i>R</i> into the linear transport path of Rectified Flow, so that sampling starts from noisy LQ at an exact acceleration point, where the signal-to-noise ratio of the starting state is continuously controlled by the residual ratio <i>&gamma;</i>. The resulting optimization target, the <b>residual vector field</b>, contains no scheduler-specific coefficients and differs from the pre-trained rectified-flow target only by the residual offset <i>&gamma;R</i>; adapting a frozen billion-scale backbone therefore reduces to fitting this compact residual correction with LoRA-only training. A knowledge-distillation pipeline built around RRF further reduces sampling to as few as 4 steps. Experiments on real-world super-resolution across multiple benchmarks show that ScaleResfusion achieves state-of-the-art restoration quality and transfers consistently across pre-trained rectified-flow backbones from 2B to 9B parameters.
+      </p>
+    </div>
+
+    <div class="highlights">
+      <div class="highlight"><b>Residual Rectified Flow</b>Start sampling from the noisy LQ image at the exact acceleration point <i>t</i>* = 1/(1+<i>&gamma;</i>), with the SNR of the start controlled by <i>&gamma;</i>.</div>
+      <div class="highlight"><b>Scheduler-independent target</b>The residual vector field <i>resv</i> = <i>v</i><sup>RF</sup> + <i>&gamma;R</i> differs from the pre-trained objective only by a residual offset.</div>
+      <div class="highlight"><b>LoRA-only adaptation</b>Frozen billion-scale backbones (SD3, FLUX.2, Z-Image) are adapted with ~60M trainable parameters.</div>
+      <div class="highlight"><b>4 steps, 646 ms</b>State-of-the-art fidelity and distribution alignment on the real-world DRealSR / RealSR benchmarks, and consistently competitive on DIV2K-Val / LSDIR-Val, at sub-second latency.</div>
+    </div>
+  </section>
+
+  <!-- ===================== Method ===================== -->
+  <section id="method">
+    <h2>Method</h2>
+
+    <h3>Residual Rectified Flow</h3>
+    <p>
+      Given an LQ&ndash;HQ pair, we define the residual <i>R</i> = <i>x&#770;</i><sub>0</sub> &minus; <i>x</i><sub>0</sub>. RRF inserts the weighted residual into the linear path of Rectified Flow while keeping the transport straight:
+    </p>
+    <div class="formula"><i>x<sub>t</sub></i> = (1 &minus; <i>t</i>)&thinsp;<i>x</i><sub>0</sub> + <i>t&gamma;R</i> + <i>t&epsilon;</i>,&emsp;&emsp;<i>resv</i> = <i>&gamma;R</i> + <i>&epsilon;</i> &minus; <i>x</i><sub>0</sub>.</div>
+    <p>
+      Substituting <i>R</i> shows that the coefficient of the unknown HQ image vanishes at <i>t</i>* = 1/(1+<i>&gamma;</i>): the state there depends only on the LQ image and Gaussian noise, so inference starts from
+      <i>x</i><sub><i>t</i>*</sub> = <i>&gamma;</i>/(1+<i>&gamma;</i>)&thinsp;<i>x&#770;</i><sub>0</sub> + 1/(1+<i>&gamma;</i>)&thinsp;<i>&epsilon;</i> and integrates the learned residual vector field back to <i>t</i> = 0 over a shortened interval. Because <i>resv</i> = <i>v</i><sup>RF</sup> + <i>&gamma;R</i> carries no scheduler-specific coefficients, adapting a pre-trained rectified-flow model only requires fitting the compact residual correction, which we realise with LoRA alone.
+    </p>
+    <figure>
+      <img src="static/images/rrf_geometry.png" alt="Geometric interpretation of Residual Rectified Flow">
+      <figcaption>(a) RRF (purple) intersects the implicit noise-to-LQ path at the acceleration point. (b) Standard Rectified Flow transports Gaussian noise to HQ images. (c) RRF starts from the noisy-LQ state and recovers the HQ image over a shortened sampling interval.</figcaption>
+    </figure>
+
+    <h3>Why start from the residual?</h3>
+    <div class="grid-2">
+      <figure>
+        <img src="static/images/residual_compact.jpg" alt="The residual term is compact in both the spatial and frequency domains">
+        <figcaption>The residual <i>R</i> is a low-energy, edge-like correction in both the spatial and frequency domains, so RRF only needs to learn a compact update around the pre-trained transport &mdash; a natural fit for LoRA.</figcaption>
+      </figure>
+      <div>
+        <p>The reverse ODE is initialization-sensitive: a start closer to the restoration manifold is transported to a terminal state closer to the HQ distribution. Gaussian initialization is task-agnostic and far from the observed content; deterministic one-step LQ&rarr;HQ mappings lose the sampling capability of diffusion models; noisy-LQ DDPM sampling is biased toward the degradation without an explicit correction direction.</p>
+        <p>ScaleResfusion instead starts from a noisy LQ state and follows a residual-oriented transport, giving a closer initialization and more coherent convergence toward the target distribution.</p>
+      </div>
+    </div>
+    <figure>
+      <img src="static/images/transport_comparison.png" alt="Initialization comparison from a transport perspective">
+      <figcaption>(a) Gaussian initialization starts far from the restoration manifold. (b) One-step restoration collapses into a deterministic LQ&rarr;HQ mapping. (c) Noisy-LQ DDPM sampling is biased toward the input degradation. (d) ScaleResfusion starts from a noisy LQ state and follows a residual-oriented transport.</figcaption>
+    </figure>
+
+    <h3>Knowledge-distilled parameter-efficient training</h3>
+    <p>
+      The restored-image generator predicts the residual vector field under RRF. LQ features are injected as conditioning (a ReferenceNet-style feature extractor for SD3 / Z-Image, token concatenation for FLUX.2), and DAPE provides textual constraints. A DMD loss and an optional GAN loss regularise the restored distribution toward natural HQ images. Generation and regularization branches share the same frozen backbone weights; only LoRA adapters are trained.
+    </p>
+    <figure>
+      <img src="static/images/framework.png" alt="ScaleResfusion training pipeline">
+      <figcaption>Overview of the training pipeline with a generation module and a regularization module.</figcaption>
+    </figure>
+  </section>
+
+  <!-- ===================== Results ===================== -->
+  <section id="results">
+    <h2>Results</h2>
+    <p>Quantitative comparison with the default <b>FLUX.2-klein-4B</b> backbone and <b>4 sampling steps</b>. <span style="color:#d83931;font-weight:700">Red</span> = best, <span style="color:#2f6fed;font-weight:600">blue</span> = second best. The first group lists GAN-based methods, the second group diffusion-based methods.</p>
+
+    <div class="tabs" role="tablist">
+      <button class="tab active" type="button" role="tab" id="tabbtn-drealsr" aria-selected="true" aria-controls="tab-drealsr" data-target="tab-drealsr">DRealSR</button>
+      <button class="tab" type="button" role="tab" id="tabbtn-realsr" aria-selected="false" aria-controls="tab-realsr" data-target="tab-realsr">RealSR</button>
+      <button class="tab" type="button" role="tab" id="tabbtn-div2k" aria-selected="false" aria-controls="tab-div2k" data-target="tab-div2k">DIV2K-Val</button>
+      <button class="tab" type="button" role="tab" id="tabbtn-lsdir" aria-selected="false" aria-controls="tab-lsdir" data-target="tab-lsdir">LSDIR-Val</button>
+    </div>
+
+    <div id="tab-drealsr" class="panel active table-wrap" role="tabpanel" aria-labelledby="tabbtn-drealsr">
+      <table>
+        <thead><tr><th>Method</th><th>PSNR &uarr;</th><th>SSIM &uarr;</th><th>LPIPS &darr;</th><th>DISTS &darr;</th><th>FID &darr;</th><th>NIQE &darr;</th><th>MUSIQ &uarr;</th><th>MANIQA &uarr;</th></tr></thead>
+        <tbody>
+          <tr><td>BSRGAN</td><td class="second">28.70</td><td>0.80</td><td>0.29</td><td class="second">0.21</td><td>155.61</td><td>6.54</td><td>57.15</td><td>0.48</td></tr>
+          <tr><td>Real-ESRGAN</td><td>28.61</td><td class="second">0.81</td><td class="second">0.28</td><td class="second">0.21</td><td>147.66</td><td>6.70</td><td>54.27</td><td>0.49</td></tr>
+          <tr><td>LDL</td><td>28.20</td><td class="second">0.81</td><td class="second">0.28</td><td class="second">0.21</td><td>155.51</td><td>7.14</td><td>53.94</td><td>0.49</td></tr>
+          <tr><td>FeMaSR</td><td>26.87</td><td>0.76</td><td>0.32</td><td>0.22</td><td>157.72</td><td class="best">5.91</td><td>53.70</td><td>0.44</td></tr>
+          <tr class="sep"><td>StableSR</td><td>28.04</td><td>0.75</td><td>0.33</td><td>0.23</td><td>144.15</td><td>6.60</td><td>58.53</td><td>0.56</td></tr>
+          <tr><td>SUPIR</td><td>25.09</td><td>0.65</td><td>0.42</td><td>0.28</td><td>169.48</td><td>7.39</td><td>58.79</td><td>0.55</td></tr>
+          <tr><td>TSD-SR</td><td>27.77</td><td>0.76</td><td>0.30</td><td class="second">0.21</td><td>134.98</td><td class="best">5.91</td><td class="best">66.62</td><td>0.59</td></tr>
+          <tr><td>AddSR</td><td>26.68</td><td>0.74</td><td>0.37</td><td>0.26</td><td>164.82</td><td>7.80</td><td>65.36</td><td>0.60</td></tr>
+          <tr><td>CCSR</td><td>28.24</td><td>0.78</td><td>0.32</td><td>0.23</td><td>157.30</td><td>6.81</td><td>66.28</td><td>0.61</td></tr>
+          <tr><td>DiffBIR</td><td>25.90</td><td>0.62</td><td>0.47</td><td>0.29</td><td>180.33</td><td>6.33</td><td>66.13</td><td class="second">0.62</td></tr>
+          <tr><td>OSEDiff</td><td>27.92</td><td>0.78</td><td>0.30</td><td>0.22</td><td>135.41</td><td>6.46</td><td>64.69</td><td>0.59</td></tr>
+          <tr><td>PASD</td><td>28.02</td><td>0.78</td><td>0.32</td><td>0.23</td><td>174.76</td><td>6.72</td><td>57.23</td><td>0.51</td></tr>
+          <tr><td>ResShift</td><td>27.05</td><td>0.74</td><td>0.39</td><td>0.26</td><td>159.90</td><td>8.65</td><td>51.24</td><td>0.47</td></tr>
+          <tr><td>SeeSR</td><td>28.07</td><td>0.77</td><td>0.32</td><td>0.23</td><td>147.37</td><td>6.41</td><td>65.09</td><td>0.61</td></tr>
+          <tr><td>FluxSR</td><td>20.88</td><td>0.61</td><td>0.39</td><td>0.25</td><td>144.66</td><td>7.11</td><td class="second">66.38</td><td>0.57</td></tr>
+          <tr class="ours sep"><td>Ours (w/o GAN)</td><td class="best">29.77</td><td class="best">0.82</td><td class="best">0.25</td><td class="best">0.20</td><td class="best">118.18</td><td>6.95</td><td>62.42</td><td>0.61</td></tr>
+          <tr class="ours"><td>Ours (w/ GAN)</td><td>28.26</td><td>0.78</td><td>0.29</td><td class="second">0.21</td><td class="second">124.03</td><td class="second">6.21</td><td>65.16</td><td class="best">0.64</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div id="tab-realsr" class="panel table-wrap" role="tabpanel" aria-labelledby="tabbtn-realsr">
+      <table>
+        <thead><tr><th>Method</th><th>PSNR &uarr;</th><th>SSIM &uarr;</th><th>LPIPS &darr;</th><th>DISTS &darr;</th><th>FID &darr;</th><th>NIQE &darr;</th><th>MUSIQ &uarr;</th><th>MANIQA &uarr;</th></tr></thead>
+        <tbody>
+          <tr><td>BSRGAN</td><td>26.38</td><td class="second">0.77</td><td>0.27</td><td class="second">0.21</td><td>141.24</td><td>5.64</td><td>63.28</td><td>0.54</td></tr>
+          <tr><td>Real-ESRGAN</td><td class="second">26.65</td><td>0.76</td><td>0.27</td><td class="second">0.21</td><td>136.29</td><td>5.85</td><td>60.45</td><td>0.55</td></tr>
+          <tr><td>LDL</td><td>25.28</td><td>0.76</td><td>0.28</td><td class="second">0.21</td><td>142.74</td><td>5.99</td><td>60.92</td><td>0.55</td></tr>
+          <tr><td>FeMaSR</td><td>25.06</td><td>0.74</td><td>0.29</td><td>0.23</td><td>141.01</td><td>5.77</td><td>59.05</td><td>0.49</td></tr>
+          <tr class="sep"><td>StableSR</td><td>24.62</td><td>0.70</td><td>0.31</td><td>0.22</td><td>128.54</td><td>5.78</td><td>65.48</td><td>0.62</td></tr>
+          <tr><td>SUPIR</td><td>23.65</td><td>0.66</td><td>0.35</td><td>0.25</td><td>130.38</td><td>6.11</td><td>62.09</td><td>0.58</td></tr>
+          <tr><td>TSD-SR</td><td>24.81</td><td>0.72</td><td>0.27</td><td class="second">0.21</td><td>114.45</td><td class="best">5.13</td><td class="second">71.19</td><td>0.63</td></tr>
+          <tr><td>AddSR</td><td>22.65</td><td>0.65</td><td>0.38</td><td>0.27</td><td>154.18</td><td>6.62</td><td class="best">71.41</td><td class="second">0.67</td></tr>
+          <tr><td>CCSR</td><td>25.92</td><td>0.75</td><td>0.28</td><td class="second">0.21</td><td>122.84</td><td>5.73</td><td>69.18</td><td>0.64</td></tr>
+          <tr><td>DiffBIR</td><td>24.83</td><td>0.65</td><td>0.36</td><td>0.24</td><td>130.75</td><td>5.84</td><td>69.28</td><td>0.65</td></tr>
+          <tr><td>OSEDiff</td><td>25.15</td><td>0.73</td><td>0.29</td><td class="second">0.21</td><td>123.53</td><td>5.65</td><td>69.08</td><td>0.63</td></tr>
+          <tr><td>PASD</td><td>26.04</td><td>0.74</td><td>0.28</td><td class="second">0.21</td><td>135.48</td><td>5.71</td><td>60.03</td><td>0.56</td></tr>
+          <tr><td>ResShift</td><td>25.66</td><td>0.74</td><td>0.33</td><td>0.25</td><td>128.03</td><td>8.07</td><td>56.89</td><td>0.51</td></tr>
+          <tr><td>SeeSR</td><td>25.15</td><td>0.72</td><td>0.30</td><td>0.22</td><td>125.30</td><td>5.40</td><td>69.81</td><td>0.65</td></tr>
+          <tr><td>FluxSR</td><td>23.83</td><td>0.69</td><td>0.32</td><td>0.23</td><td>120.63</td><td>6.57</td><td>70.07</td><td>0.61</td></tr>
+          <tr class="ours sep"><td>Ours (w/o GAN)</td><td class="best">27.05</td><td class="best">0.78</td><td class="best">0.24</td><td class="best">0.20</td><td class="best">104.74</td><td>6.21</td><td>67.25</td><td>0.64</td></tr>
+          <tr class="ours"><td>Ours (w/ GAN)</td><td>25.78</td><td>0.75</td><td class="second">0.26</td><td class="best">0.20</td><td class="second">106.22</td><td class="second">5.29</td><td>69.86</td><td class="best">0.68</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div id="tab-div2k" class="panel table-wrap" role="tabpanel" aria-labelledby="tabbtn-div2k">
+      <table>
+        <thead><tr><th>Method</th><th>PSNR &uarr;</th><th>SSIM &uarr;</th><th>LPIPS &darr;</th><th>DISTS &darr;</th><th>FID &darr;</th><th>NIQE &darr;</th><th>MUSIQ &uarr;</th><th>MANIQA &uarr;</th></tr></thead>
+        <tbody>
+          <tr><td>BSRGAN</td><td>24.58</td><td class="second">0.63</td><td>0.35</td><td>0.23</td><td>49.55</td><td>4.75</td><td>61.68</td><td>0.50</td></tr>
+          <tr><td>Real-ESRGAN</td><td>24.02</td><td class="best">0.64</td><td>0.32</td><td>0.21</td><td>38.87</td><td>4.83</td><td>60.38</td><td>0.54</td></tr>
+          <tr><td>LDL</td><td>23.83</td><td class="second">0.63</td><td>0.33</td><td>0.22</td><td>42.28</td><td>4.86</td><td>60.04</td><td>0.53</td></tr>
+          <tr><td>FeMaSR</td><td>22.45</td><td>0.59</td><td>0.34</td><td>0.22</td><td>41.97</td><td>4.87</td><td>57.94</td><td>0.48</td></tr>
+          <tr class="sep"><td>StableSR</td><td>23.27</td><td>0.57</td><td>0.31</td><td>0.20</td><td>24.95</td><td>4.77</td><td>65.78</td><td>0.62</td></tr>
+          <tr><td>SUPIR</td><td>22.13</td><td>0.53</td><td>0.39</td><td>0.23</td><td>31.40</td><td>5.68</td><td>63.86</td><td>0.59</td></tr>
+          <tr><td>TSD-SR</td><td>23.02</td><td>0.58</td><td class="second">0.27</td><td class="second">0.18</td><td>29.16</td><td class="best">4.32</td><td class="best">71.69</td><td>0.62</td></tr>
+          <tr><td>AddSR</td><td>22.37</td><td>0.56</td><td>0.38</td><td>0.23</td><td>34.91</td><td>5.84</td><td>69.15</td><td>0.63</td></tr>
+          <tr><td>CCSR</td><td>24.30</td><td class="second">0.63</td><td>0.30</td><td>0.20</td><td>30.84</td><td>5.34</td><td>69.53</td><td>0.61</td></tr>
+          <tr><td>DiffBIR</td><td>23.14</td><td>0.54</td><td>0.37</td><td>0.22</td><td>32.71</td><td>4.99</td><td class="second">69.87</td><td class="second">0.64</td></tr>
+          <tr><td>OSEDiff</td><td>23.72</td><td>0.61</td><td>0.29</td><td>0.20</td><td>26.34</td><td>4.71</td><td>67.96</td><td>0.61</td></tr>
+          <tr><td>PASD</td><td>24.01</td><td>0.61</td><td>0.38</td><td>0.22</td><td>37.06</td><td>4.98</td><td>63.75</td><td>0.55</td></tr>
+          <tr><td>ResShift</td><td class="second">24.59</td><td>0.62</td><td>0.31</td><td>0.21</td><td>30.81</td><td>6.92</td><td>58.90</td><td>0.53</td></tr>
+          <tr><td>SeeSR</td><td>23.68</td><td>0.60</td><td>0.32</td><td>0.20</td><td>25.89</td><td>4.81</td><td>68.66</td><td>0.62</td></tr>
+          <tr class="ours sep"><td>Ours (w/o GAN)</td><td class="best">24.90</td><td class="best">0.64</td><td class="second">0.27</td><td class="second">0.18</td><td class="second">22.90</td><td>5.09</td><td>66.10</td><td>0.63</td></tr>
+          <tr class="ours"><td>Ours (w/ GAN)</td><td>23.63</td><td>0.60</td><td class="best">0.26</td><td class="best">0.17</td><td class="best">19.47</td><td class="second">4.44</td><td>69.30</td><td class="best">0.68</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div id="tab-lsdir" class="panel table-wrap" role="tabpanel" aria-labelledby="tabbtn-lsdir">
+      <table>
+        <thead><tr><th>Method</th><th>PSNR &uarr;</th><th>SSIM &uarr;</th><th>LPIPS &darr;</th><th>DISTS &darr;</th><th>FID &darr;</th><th>NIQE &darr;</th><th>MUSIQ &uarr;</th><th>MANIQA &uarr;</th></tr></thead>
+        <tbody>
+          <tr><td>BSRGAN</td><td>20.82</td><td>0.54</td><td>0.25</td><td>0.16</td><td>46.37</td><td>4.21</td><td>68.94</td><td>0.63</td></tr>
+          <tr><td>Real-ESRGAN</td><td>20.58</td><td class="second">0.55</td><td>0.24</td><td class="second">0.15</td><td class="second">41.28</td><td>4.18</td><td>69.52</td><td>0.64</td></tr>
+          <tr><td>LDL</td><td>20.31</td><td>0.53</td><td>0.25</td><td>0.16</td><td>44.75</td><td>4.36</td><td>68.61</td><td>0.64</td></tr>
+          <tr><td>FeMaSR</td><td>19.87</td><td>0.51</td><td>0.27</td><td>0.17</td><td>48.63</td><td>4.09</td><td>67.85</td><td>0.61</td></tr>
+          <tr class="sep"><td>StableSR</td><td>20.31</td><td class="second">0.55</td><td>0.31</td><td>0.18</td><td>54.76</td><td>5.07</td><td>62.96</td><td>0.61</td></tr>
+          <tr><td>SUPIR</td><td>20.35</td><td>0.50</td><td>0.24</td><td class="second">0.15</td><td>43.81</td><td>4.81</td><td>71.47</td><td>0.67</td></tr>
+          <tr><td>TSD-SR</td><td>19.05</td><td>0.49</td><td class="best">0.21</td><td class="best">0.14</td><td>45.66</td><td>3.86</td><td class="best">74.45</td><td>0.68</td></tr>
+          <tr><td>AddSR</td><td>19.20</td><td>0.45</td><td>0.34</td><td>0.20</td><td>79.80</td><td>4.99</td><td class="second">74.20</td><td class="best">0.70</td></tr>
+          <tr><td>CCSR</td><td>20.76</td><td>0.53</td><td>0.26</td><td>0.16</td><td>56.28</td><td>4.25</td><td>72.57</td><td>0.66</td></tr>
+          <tr><td>DiffBIR</td><td>20.51</td><td>0.49</td><td>0.27</td><td>0.16</td><td>58.45</td><td>4.44</td><td>73.26</td><td>0.68</td></tr>
+          <tr><td>OSEDiff</td><td>20.39</td><td>0.52</td><td>0.27</td><td>0.16</td><td>59.57</td><td>4.03</td><td>72.34</td><td>0.66</td></tr>
+          <tr><td>PASD</td><td>20.93</td><td>0.52</td><td>0.31</td><td>0.17</td><td>59.11</td><td class="best">3.80</td><td>69.29</td><td>0.62</td></tr>
+          <tr><td>ResShift</td><td class="second">21.23</td><td class="second">0.55</td><td class="second">0.23</td><td class="best">0.14</td><td class="best">38.98</td><td>5.32</td><td>68.56</td><td>0.61</td></tr>
+          <tr><td>SeeSR</td><td>20.69</td><td>0.52</td><td>0.25</td><td class="second">0.15</td><td>52.06</td><td>4.10</td><td>73.27</td><td>0.68</td></tr>
+          <tr class="ours sep"><td>Ours (w/o GAN)</td><td class="best">21.35</td><td class="best">0.57</td><td class="second">0.23</td><td class="best">0.14</td><td>41.69</td><td>4.21</td><td>70.61</td><td>0.67</td></tr>
+          <tr class="ours"><td>Ours (w/ GAN)</td><td>20.64</td><td class="second">0.55</td><td class="best">0.21</td><td class="best">0.14</td><td>43.56</td><td class="second">3.82</td><td>72.59</td><td class="second">0.69</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>Efficiency</h3>
+    <p>Number of function evaluations (NFE) and average inference time per 512&times;512 image on a single NVIDIA RTX A6000.</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Method</th><th>StableSR</th><th>SUPIR</th><th>SeeSR</th><th>ResShift</th><th>CCSR</th><th>OSEDiff</th><th>Ours</th></tr></thead>
+        <tbody>
+          <tr><td>NFE</td><td>200</td><td>50</td><td>50</td><td>15</td><td>6</td><td>1</td><td class="best">4</td></tr>
+          <tr><td>Inference time (ms)</td><td>12,036</td><td>25,252</td><td>4,445</td><td>848</td><td>516</td><td>266</td><td class="best">646</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>Consistent transfer across backbones</h3>
+    <p>RRF adapts pre-trained rectified-flow backbones that differ in architecture and scale &mdash; SD3 (2B), FLUX.2-klein (4B / 9B) and Z-Image (6B) &mdash; with the same LoRA-only recipe. Results on DRealSR; the upper block is <i>w/o GAN</i>, the lower block <i>w/ GAN</i>.</p>
+    <div class="grid-2">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Backbone</th><th>PSNR &uarr;</th><th>SSIM &uarr;</th><th>LPIPS &darr;</th><th>DISTS &darr;</th><th>FID &darr;</th></tr></thead>
+          <tbody>
+            <tr><td>SD3 (2B)</td><td>28.77</td><td>0.79</td><td>0.30</td><td>0.23</td><td>149.67</td></tr>
+            <tr><td>FLUX2-Klein (4B)</td><td class="second">29.77</td><td class="best">0.82</td><td class="best">0.25</td><td class="second">0.20</td><td class="second">118.18</td></tr>
+            <tr><td>Z-Image (6B)</td><td>29.35</td><td class="second">0.80</td><td class="second">0.28</td><td>0.22</td><td>132.31</td></tr>
+            <tr><td>FLUX2-Klein (9B)</td><td class="best">30.17</td><td class="best">0.82</td><td class="best">0.25</td><td class="best">0.19</td><td class="best">109.28</td></tr>
+            <tr class="sep"><td>SD3 (2B), w/ GAN</td><td>27.86</td><td>0.76</td><td>0.32</td><td>0.22</td><td>146.93</td></tr>
+            <tr><td>FLUX2-Klein (4B), w/ GAN</td><td>28.26</td><td class="second">0.78</td><td class="second">0.29</td><td class="second">0.21</td><td class="second">124.03</td></tr>
+            <tr><td>Z-Image (6B), w/ GAN</td><td class="second">28.34</td><td class="second">0.78</td><td class="best">0.28</td><td class="second">0.21</td><td>127.40</td></tr>
+            <tr><td>FLUX2-Klein (9B), w/ GAN</td><td class="best">28.77</td><td class="best">0.79</td><td class="best">0.28</td><td class="best">0.19</td><td class="best">116.69</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <figure>
+        <img src="static/images/backbone_scaling.png" alt="Consistent transfer of ScaleResfusion across backbones">
+        <figcaption>Fidelity and perceptual quality improve from SD3 (2B) to FLUX2 (9B); FLUX2-4B offers the best quality&ndash;efficiency trade-off.</figcaption>
+      </figure>
+    </div>
+
+    <h3>Few-step sampling</h3>
+    <div class="grid-2">
+      <div>
+        <p>Separately trained 4-, 2- and 1-step FLUX.2-4B models on DRealSR. More steps improve fidelity, while even the 1-step model remains competitive thanks to the RRF acceleration point.</p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>NFE</th><th>PSNR &uarr;</th><th>SSIM &uarr;</th><th>LPIPS &darr;</th><th>FID &darr;</th></tr></thead>
+            <tbody>
+              <tr><td>4-step</td><td class="best">29.77</td><td class="best">0.82</td><td class="best">0.25</td><td>118.18</td></tr>
+              <tr><td>2-step</td><td class="second">29.03</td><td class="second">0.79</td><td class="second">0.27</td><td class="best">115.43</td></tr>
+              <tr><td>1-step</td><td>28.93</td><td>0.78</td><td>0.28</td><td class="second">117.56</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <figure>
+        <img src="static/images/nfe_intermediate.jpg" alt="Intermediate restoration results of the multi-step model">
+        <figcaption>Intermediate predictions of a single 4-step model: early steps recover the global structure, later steps refine details.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ===================== Visual comparison ===================== -->
+  <section id="visual">
+    <h2>Visual Comparison</h2>
+    <figure>
+      <img src="static/images/visual_lsdir_1.jpg" alt="Visual comparison with existing diffusion-based restoration methods">
+      <figcaption>Left: ScaleResfusion result. Right: local crops of LQ, ResShift, StableSR, CCSR, AddSR, SeeSR, SUPIR, OSEDiff, ScaleResfusion and HQ.</figcaption>
+    </figure>
+
+    <div class="gallery">
+      <details>
+        <summary>DRealSR</summary>
+        <figure><img src="static/images/visual_drealsr.jpg" alt="More visual comparison on DRealSR" loading="lazy"></figure>
+      </details>
+      <details>
+        <summary>RealSR</summary>
+        <figure><img src="static/images/visual_realsr.jpg" alt="More visual comparison on RealSR" loading="lazy"></figure>
+      </details>
+      <details>
+        <summary>DIV2K-Val</summary>
+        <figure><img src="static/images/visual_div2k.jpg" alt="More visual comparison on DIV2K-Val" loading="lazy"></figure>
+      </details>
+      <details>
+        <summary>LSDIR-Val</summary>
+        <figure><img src="static/images/visual_lsdir_2.jpg" alt="More visual comparison on LSDIR-Val" loading="lazy"></figure>
+      </details>
+      <details>
+        <summary>WebPhoto-Test (in-the-wild face restoration, zero-shot)</summary>
+        <figure><img src="static/images/visual_webphoto.jpg" alt="Visual comparison on WebPhoto-Test" loading="lazy"></figure>
+      </details>
+    </div>
+  </section>
+
+  <!-- ===================== User study ===================== -->
+  <section id="user-study">
+    <h2>User Study</h2>
+    <p>Pairwise <i>model arena</i>: in each round a participant sees an LQ input with the anonymised results of two models and picks the preferred one (or tie / both bad). 48 evaluators contributed 1,756 pairwise comparisons over benchmark images and in-the-wild photos.</p>
+    <figure>
+      <img src="static/images/user_study.png" alt="Pairwise arena user study results">
+      <figcaption>Left: ScaleResfusion wins 71.8% of cross-model comparisons. Right: it tops the Random Arena ranking with a 75.8% overall score.</figcaption>
+    </figure>
+  </section>
+
+  <!-- ===================== Video ===================== -->
+  <section id="video">
+    <h2>Video</h2>
+    <div class="card video-card">
+      <p>A short video introduction of ScaleResfusion is available online.</p>
+      <a class="btn" href="https://mailnankaieducn-my.sharepoint.com/:v:/g/personal/shizhenning_mail_nankai_edu_cn/IQBoy3T-p6qTSLhhpoZn3KyFAaJA3kvdiBXgoGy2aa1AcQ8?e=GmWi7q" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm-2 14.5v-9l7 4.5-7 4.5z"/></svg>
+        Watch the video
+      </a>
+    </div>
+  </section>
+
+  <!-- ===================== BibTeX ===================== -->
+  <section id="bibtex">
+    <h2>BibTeX</h2>
+    <div class="bib-wrap">
+      <button class="copy-btn" id="copy-bib" type="button">Copy</button>
+<pre class="bibtex" id="bib">@article{shi2026scaleresfusion,
+  title   = {ScaleResfusion: Residual Rectified Flow based on Residual Vector Field},
+  author  = {Shi, Zhenning and Xu, Chen and Zhang, Junhao and Zhang, Kefei and Liu, Linjie and Zheng, Zhedong and Li, Tao},
+  journal = {arXiv preprint arXiv:2607.25275},
+  year    = {2026}
+}</pre>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="container">
+    <p>ScaleResfusion is released under the Apache 2.0 license. Code: <a href="https://github.com/YukinoshitaLove/ScaleResfusion">github.com/YukinoshitaLove/ScaleResfusion</a>.<br>
+    Built on <a href="https://github.com/cswry/OSEDiff">OSEDiff</a>, <a href="https://github.com/huggingface/diffusers">diffusers</a> and <a href="https://github.com/nkicsl/Resfusion">Resfusion</a>.</p>
+  </div>
+</footer>
+
+<script>
+  // result tabs
+  document.querySelectorAll('.tab').forEach(function (tab) {
+    tab.addEventListener('click', function () {
+      document.querySelectorAll('.tab').forEach(function (t) {
+        t.classList.remove('active');
+        t.setAttribute('aria-selected', 'false');
+      });
+      document.querySelectorAll('.panel').forEach(function (p) { p.classList.remove('active'); });
+      tab.classList.add('active');
+      tab.setAttribute('aria-selected', 'true');
+      document.getElementById(tab.dataset.target).classList.add('active');
+    });
+  });
+  // copy bibtex (clipboard API with a selection fallback)
+  var copyBtn = document.getElementById('copy-bib');
+  if (copyBtn) {
+    copyBtn.addEventListener('click', function () {
+      var bib = document.getElementById('bib');
+      var text = bib.innerText;
+      function done(label) {
+        copyBtn.textContent = label;
+        setTimeout(function () { copyBtn.textContent = 'Copy'; }, 1500);
+      }
+      function fallback() {
+        var range = document.createRange();
+        range.selectNodeContents(bib);
+        var sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(range);
+        var ok = false;
+        try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+        done(ok ? 'Copied!' : 'Press Ctrl+C');
+      }
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(function () { done('Copied!'); }, fallback);
+      } else {
+        fallback();
+      }
+    });
+  }
+</script>
+</body>
+</html>

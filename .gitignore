@@ -1,0 +1,30 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# IDE / local tooling
+.idea/
+.vscode/
+.claude/
+
+# Model weights / checkpoints
+*.safetensors
+*.pth
+*.pt
+*.ckpt
+*.bin
+preset/
+experience/
+checkpoints/
+
+# Outputs
+results/
+outputs/
+*.log
+
+# OS
+.DS_Store
+Thumbs.db

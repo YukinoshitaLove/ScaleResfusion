@@ -1,0 +1,18 @@
+# PyTorch: install a build matching your CUDA version first, e.g.
+#   pip install torch torchvision --index-url https://download.pytorch.org/whl/cu130
+# The FLUX.2-klein pipeline needs diffusers >= 0.37 and transformers >= 5.
+diffusers[torch]==0.37.0
+transformers==5.3.0
+huggingface-hub==1.4.0
+accelerate
+peft==0.18.1
+PyYAML==6.0
+scipy
+# ---- caption generation (DAPE / RAM), optional ----
+timm
+fairscale
+loralib==0.1.2
+# ---- evaluation (test_metrics.py), optional ----
+pyiqa
+opencv-python-headless
+setuptools<81   # pyiqa's CLIP dependency still imports pkg_resources
