@@ -24,8 +24,25 @@ a { color: var(--accent-2); }
 
 /* ---------- hero ---------- */
 header.hero { text-align: center; padding: 56px 0 20px; }
-h1.title { font-size: 2.25rem; line-height: 1.25; margin: 0 0 20px; font-weight: 700; letter-spacing: -0.01em; }
-h1.title .sub { display: block; font-size: 1.35rem; font-weight: 500; color: var(--muted); margin-top: 6px; }
+h1.title {
+  font-family: "Source Serif 4", "Source Serif Pro", Charter, Georgia, "Times New Roman", serif;
+  font-size: 3.6rem; line-height: 1.15; margin: 0 0 22px; font-weight: 800; letter-spacing: -0.01em;
+}
+h1.title .brand {
+  font-style: normal;
+  background: linear-gradient(90deg, #3b8fe0 0%, #3fb8c9 25%, #63bf5a 55%, #b9c23a 80%, #e6b83a 100%);
+  -webkit-background-clip: text; background-clip: text;
+  color: transparent; -webkit-text-fill-color: transparent;
+}
+h1.title .sub {
+  display: block; font-size: 2.05rem; line-height: 1.25; font-weight: 700; font-style: normal;
+  color: var(--fg); margin-top: 10px;
+}
+h1.title .sub .hl {
+  background: linear-gradient(90deg, #f0a020 0%, #ef7f8a 45%, #b48cf2 100%);
+  -webkit-background-clip: text; background-clip: text;
+  color: transparent; -webkit-text-fill-color: transparent;
+}
 .authors { font-size: 1.1rem; margin-bottom: 6px; }
 .authors a { text-decoration: none; }
 .authors a:hover { text-decoration: underline; }
@@ -115,8 +132,8 @@ footer {
 
 @media (max-width: 760px) {
   body { font-size: 16px; }
-  h1.title { font-size: 1.6rem; }
-  h1.title .sub { font-size: 1.1rem; }
+  h1.title { font-size: 2.3rem; }
+  h1.title .sub { font-size: 1.35rem; }
   .grid-2 { grid-template-columns: 1fr; }
   header.hero { padding-top: 36px; }
 }
