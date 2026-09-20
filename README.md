@@ -26,7 +26,7 @@
 [![arXiv](https://img.shields.io/badge/arXiv-2607.25275-b31b1b.svg)](https://arxiv.org/abs/2607.25275)
 [![Project Page](https://img.shields.io/badge/Project-Page-4c6ef5.svg)](https://yukinoshitalove.github.io/ScaleResfusion/)
 [![Video](https://img.shields.io/badge/Video-Demo-e03131.svg)](https://mailnankaieducn-my.sharepoint.com/:v:/g/personal/shizhenning_mail_nankai_edu_cn/IQBoy3T-p6qTSLhhpoZn3KyFAaJA3kvdiBXgoGy2aa1AcQ8?e=GmWi7q)
-[![Weights](https://img.shields.io/badge/Weights-coming%20soon-lightgrey.svg)](#-model-zoo)
+[![Weights](https://img.shields.io/badge/Weights-Download-f59f00.svg)](#-model-zoo)
 [![License](https://img.shields.io/badge/License-Apache%202.0-2f9e44.svg)](LICENSE)
 
 <img src="docs/static/images/teaser.jpg" width="100%" alt="ScaleResfusion teaser">
@@ -89,10 +89,10 @@ export HF_HOME=/path/to/your/hf_cache
 
 | Model | Description | Download |
 |:---|:---|:---|
-| FLUX.2-klein-base-4B | Frozen backbone (Apache-2.0), downloaded automatically from Hugging Face | [🤗 black-forest-labs/FLUX.2-klein-base-4B](https://huggingface.co/black-forest-labs/FLUX.2-klein-base-4B) |
-| ScaleResfusion-FLUX2-4B (w/o GAN) | LoRA adapter, fidelity-oriented variant (`gen_hq_transformer_lora.safetensors`) | [huggingface](https://huggingface.co/flashszn/ScaleResfusion/tree/main/weights/4B) |
-| ScaleResfusion-FLUX2-4B (w/ GAN) | LoRA adapter, perception-oriented variant (`gen_hq_transformer_lora.safetensors`) | [huggingface](https://huggingface.co/flashszn/ScaleResfusion/tree/main/weights/4B_gan) |
-| RAM | Tagging model used by DAPE (`ram_swin_large_14m.pth`) | [🤗 recognize-anything](https://huggingface.co/spaces/xinyu1205/recognize-anything/blob/main/ram_swin_large_14m.pth) |
+| FLUX.2-klein-base-4B | Frozen backbone (Apache-2.0), downloaded automatically from Hugging Face | [🤗 FLUX.2-klein-base-4B](https://huggingface.co/black-forest-labs/FLUX.2-klein-base-4B) |
+| ScaleResfusion-FLUX2-4B (w/o GAN) | LoRA adapter, fidelity-oriented variant (`gen_hq_transformer_lora.safetensors`) | [🤗 ScaleResfusion-4B (w/o GAN)](https://huggingface.co/flashszn/ScaleResfusion/tree/main/weights/4B) |
+| ScaleResfusion-FLUX2-4B (w/ GAN) | LoRA adapter, perception-oriented variant (`gen_hq_transformer_lora.safetensors`) | [🤗 ScaleResfusion-4B (w/ GAN)](https://huggingface.co/flashszn/ScaleResfusion/tree/main/weights/4B_gan) |
+| RAM | Tagging model used by DAPE (`ram_swin_large_14m.pth`) | [🤗 Recognize Anything](https://huggingface.co/spaces/xinyu1205/recognize-anything/blob/main/ram_swin_large_14m.pth) |
 | DAPE | Degradation-aware prompt extractor from [SeeSR](https://github.com/cswry/SeeSR); checkpoint as redistributed by [OSEDiff](https://github.com/cswry/OSEDiff) (`DAPE.pth`) | [Google Drive](https://drive.google.com/file/d/1KIV6VewwO2eDC9g4Gcvgm-a0LDI7Lmwm/view?usp=drive_link) |
 
 ## ⚡ Quick Inference
