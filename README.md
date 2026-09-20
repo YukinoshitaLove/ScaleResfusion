@@ -26,7 +26,7 @@
 [![arXiv](https://img.shields.io/badge/arXiv-2607.25275-b31b1b.svg)](https://arxiv.org/abs/2607.25275)
 [![Project Page](https://img.shields.io/badge/Project-Page-4c6ef5.svg)](https://yukinoshitalove.github.io/ScaleResfusion/)
 [![Video](https://img.shields.io/badge/Video-Demo-e03131.svg)](https://mailnankaieducn-my.sharepoint.com/:v:/g/personal/shizhenning_mail_nankai_edu_cn/IQBoy3T-p6qTSLhhpoZn3KyFAaJA3kvdiBXgoGy2aa1AcQ8?e=GmWi7q)
-[![Weights](https://img.shields.io/badge/Weights-coming%20soon-lightgrey.svg)](#-model-zoo)
+[![Weights](https://img.shields.io/badge/Weights%20-lightgrey.svg)](https://huggingface.co/flashszn/ScaleResfusion/tree/main/weights)
 [![License](https://img.shields.io/badge/License-Apache%202.0-2f9e44.svg)](LICENSE)
 
 <img src="docs/static/images/teaser.jpg" width="100%" alt="ScaleResfusion teaser">
