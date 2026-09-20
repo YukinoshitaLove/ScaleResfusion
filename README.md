@@ -89,10 +89,10 @@ export HF_HOME=/path/to/your/hf_cache
 
 | Model | Description | Download |
 |:---|:---|:---|
-| FLUX.2-klein-base-4B | Frozen backbone (Apache-2.0), downloaded automatically from Hugging Face | [🤗 black-forest-labs/FLUX.2-klein-base-4B](https://huggingface.co/black-forest-labs/FLUX.2-klein-base-4B) |
-| ScaleResfusion-FLUX2-4B (w/o GAN) | LoRA adapter, fidelity-oriented variant (`gen_hq_transformer_lora.safetensors`) | [huggingface](https://huggingface.co/flashszn/ScaleResfusion/tree/main/weights/4B) |
-| ScaleResfusion-FLUX2-4B (w/ GAN) | LoRA adapter, perception-oriented variant (`gen_hq_transformer_lora.safetensors`) | [huggingface](https://huggingface.co/flashszn/ScaleResfusion/tree/main/weights/4B_gan) |
-| RAM | Tagging model used by DAPE (`ram_swin_large_14m.pth`) | [🤗 recognize-anything](https://huggingface.co/spaces/xinyu1205/recognize-anything/blob/main/ram_swin_large_14m.pth) |
+| FLUX.2-klein-base-4B | Frozen backbone (Apache-2.0), downloaded automatically from Hugging Face | [🤗 FLUX.2-klein-base-4B](https://huggingface.co/black-forest-labs/FLUX.2-klein-base-4B) |
+| ScaleResfusion-FLUX2-4B (w/o GAN) | LoRA adapter, fidelity-oriented variant (`gen_hq_transformer_lora.safetensors`) | [🤗 ScaleResfusion-4B (w/o GAN)](https://huggingface.co/flashszn/ScaleResfusion/tree/main/weights/4B) |
+| ScaleResfusion-FLUX2-4B (w/ GAN) | LoRA adapter, perception-oriented variant (`gen_hq_transformer_lora.safetensors`) | [🤗 ScaleResfusion-4B (w/ GAN)](https://huggingface.co/flashszn/ScaleResfusion/tree/main/weights/4B_gan) |
+| RAM | Tagging model used by DAPE (`ram_swin_large_14m.pth`) | [🤗 Recognize Anything](https://huggingface.co/spaces/xinyu1205/recognize-anything/blob/main/ram_swin_large_14m.pth) |
 | DAPE | Degradation-aware prompt extractor from [SeeSR](https://github.com/cswry/SeeSR); checkpoint as redistributed by [OSEDiff](https://github.com/cswry/OSEDiff) (`DAPE.pth`) | [Google Drive](https://drive.google.com/file/d/1KIV6VewwO2eDC9g4Gcvgm-a0LDI7Lmwm/view?usp=drive_link) |
 
 ## ⚡ Quick Inference
