@@ -46,7 +46,7 @@ ScaleResfusion rewrites residual image restoration as a **scheduler-independent 
 ## 📋 Release Plan
 
 - [x] Inference code — FLUX.2-klein-4B
-- [ ] Pretrained LoRA weights — FLUX.2-klein-4B (w/o GAN, w/ GAN) + benchmark results and DAPE captions
+- [x] Pretrained LoRA weights — FLUX.2-klein-4B (w/o GAN, w/ GAN) + benchmark results and DAPE captions
 - [ ] Inference code and weights — SD3 (2B), Z-Image (6B), FLUX.2-klein-9B
 - [ ] Training code
 
