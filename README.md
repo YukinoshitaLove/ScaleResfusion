@@ -344,7 +344,7 @@ Separately trained 4-, 2- and 1-step FLUX.2-4B models on DRealSR. Even the 1-ste
 
 ## 📏 Results (CLIPIQA tuned)
 
-We tuned an additional ScaleResfusion variant specifically for CLIPIQA. The following tables compare the CLIPIQA-tuned **FLUX.2-klein-4B** model with other methods on DRealSR, RealSR, DIV2K-Val and LSDIR-Val.
+We fine-tuned our ScaleResfusion model using a CLIPIQA loss. The following tables compare the CLIPIQA-tuned **FLUX.2-klein-4B** model with other methods on DRealSR, RealSR, DIV2K-Val and LSDIR-Val.
 
 **Bold** = best, *italic* = second best within each table. ↑ higher is better, ↓ lower is better.
 
@@ -390,7 +390,7 @@ We tuned an additional ScaleResfusion variant specifically for CLIPIQA. The foll
 | PASD | 26.04 | 0.74 | 0.28 | *0.21* | 135.48 | 5.71 | 60.03 | 0.56 | 0.51 |
 | ResShift | 25.66 | 0.74 | 0.33 | 0.25 | 128.03 | 8.07 | 56.89 | 0.51 | 0.54 |
 | SeeSR | 25.15 | 0.72 | 0.30 | 0.22 | 125.30 | *5.40* | 69.81 | 0.65 | 0.67 |
-| **ScaleResfusion (CLIPIQA tuned)** | 26.30 | 0.75 | 0.28 | 0.22 | **107.48** | 5.75 | 70.33 | *0.66* | **0.81** |
+| **ScaleResfusion** | 26.30 | 0.75 | 0.28 | 0.22 | **107.48** | 5.75 | 70.33 | *0.66* | **0.81** |
 
 </details>
 
@@ -413,7 +413,7 @@ We tuned an additional ScaleResfusion variant specifically for CLIPIQA. The foll
 | PASD | 24.01 | 0.61 | 0.38 | 0.22 | 37.06 | 4.98 | 63.75 | 0.55 | 0.60 |
 | ResShift | **24.59** | 0.62 | 0.31 | 0.21 | 30.81 | 6.92 | 58.90 | 0.53 | 0.57 |
 | SeeSR | 23.68 | 0.60 | 0.32 | 0.20 | 25.89 | 4.81 | 68.66 | 0.62 | 0.69 |
-| **ScaleResfusion (CLIPIQA tuned)** | 24.41 | 0.63 | *0.27* | *0.19* | **24.39** | 4.80 | 69.82 | **0.65** | **0.83** |
+| **ScaleResfusion** | 24.41 | 0.63 | *0.27* | *0.19* | **24.39** | 4.80 | 69.82 | **0.65** | **0.83** |
 
 </details>
 
@@ -436,7 +436,7 @@ We tuned an additional ScaleResfusion variant specifically for CLIPIQA. The foll
 | PASD | 20.93 | 0.52 | 0.31 | 0.17 | 59.11 | **3.80** | 69.29 | 0.62 | 0.64 |
 | ResShift | **21.23** | **0.55** | *0.23* | *0.14* | **38.98** | 5.32 | 68.56 | 0.61 | 0.65 |
 | SeeSR | 20.69 | 0.52 | 0.25 | 0.15 | 52.06 | 4.10 | 73.27 | *0.68* | 0.72 |
-| **ScaleResfusion (CLIPIQA tuned)** | *21.05* | **0.55** | **0.21** | **0.13** | 41.91 | 4.27 | 73.11 | *0.68* | **0.82** |
+| **ScaleResfusion** | *21.05* | **0.55** | **0.21** | **0.13** | 41.91 | 4.27 | 73.11 | *0.68* | **0.82** |
 
 </details>
 
