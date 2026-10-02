@@ -166,7 +166,7 @@ python test_metrics.py \
 hf download flashszn/ScaleResfusion --include "results/*" --local-dir ./download
 ```
 
-All numbers below are from the paper. Unless stated otherwise, *Ours* uses the default **FLUX.2-klein-4B** backbone and **4 sampling steps**. **Bold** = best, *italic* = second best. ↑ higher is better, ↓ lower is better.
+All numbers in this section are from the paper. Unless stated otherwise, *Ours* uses the default **FLUX.2-klein-4B** backbone and **4 sampling steps**. **Bold** = best, *italic* = second best. ↑ higher is better, ↓ lower is better.
 
 ### Real-world benchmarks
 
@@ -341,6 +341,104 @@ Separately trained 4-, 2- and 1-step FLUX.2-4B models on DRealSR. Even the 1-ste
   <img src="docs/static/images/user_study.png" width="80%" alt="Pairwise arena user study">
 </p>
 <p align="center"><i>Pairwise arena with 48 evaluators and 1,756 comparisons: ScaleResfusion is preferred in 71.8% of cross-model comparisons and tops the Random Arena ranking with a 75.8% overall score.</i></p>
+
+## 📏 Results (CLIPIQA tuned)
+
+We tuned an additional ScaleResfusion variant specifically for CLIPIQA. The following tables compare the CLIPIQA-tuned **FLUX.2-klein-4B** model with other methods on DRealSR, RealSR, DIV2K-Val and LSDIR-Val.
+
+**Bold** = best, *italic* = second best within each table. ↑ higher is better, ↓ lower is better.
+
+<details open>
+<summary><b>DRealSR</b></summary>
+
+| Method | PSNR ↑ | SSIM ↑ | LPIPS ↓ | DISTS ↓ | FID ↓ | NIQE ↓ | MUSIQ ↑ | MANIQA ↑ | CLIPIQA ↑ |
+|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|
+| BSRGAN | *28.70* | 0.80 | 0.29 | 0.21 | 155.61 | 6.54 | 57.15 | 0.48 | 0.51 |
+| Real-ESRGAN | 28.61 | *0.81* | *0.28* | **0.21** | 147.66 | 6.70 | 54.27 | 0.49 | 0.45 |
+| LDL | 28.20 | **0.81** | **0.28** | *0.21* | 155.51 | 7.14 | 53.94 | 0.49 | 0.45 |
+| FeMaSR | 26.87 | 0.76 | 0.32 | 0.22 | 157.72 | **5.91** | 53.70 | 0.44 | 0.56 |
+| StableSR | 28.04 | 0.75 | 0.33 | 0.23 | 144.15 | 6.60 | 58.53 | 0.56 | 0.63 |
+| SUPIR | 25.09 | 0.65 | 0.42 | 0.28 | 169.48 | 7.39 | 58.79 | 0.55 | 0.67 |
+| TSD-SR | 27.77 | 0.76 | 0.30 | 0.21 | *134.98* | *5.91* | **66.62** | 0.59 | *0.73* |
+| AddSR | 26.68 | 0.74 | 0.37 | 0.26 | 164.82 | 7.80 | 65.36 | 0.60 | 0.71 |
+| CCSR | 28.24 | 0.78 | 0.32 | 0.23 | 157.30 | 6.81 | 66.28 | 0.61 | 0.66 |
+| DiffBIR | 25.90 | 0.62 | 0.47 | 0.29 | 180.33 | 6.33 | 66.13 | *0.62* | 0.71 |
+| OSEDiff | 27.92 | 0.78 | 0.30 | 0.22 | 135.41 | 6.46 | 64.69 | 0.59 | 0.70 |
+| PASD | 28.02 | 0.78 | 0.32 | 0.23 | 174.76 | 6.72 | 57.23 | 0.51 | 0.55 |
+| ResShift | 27.05 | 0.74 | 0.39 | 0.26 | 159.90 | 8.65 | 51.24 | 0.47 | 0.54 |
+| SeeSR | 28.07 | 0.77 | 0.32 | 0.23 | 147.37 | 6.41 | 65.09 | 0.61 | 0.69 |
+| **ScaleResfusion (CLIPIQA tuned)** | **28.98** | 0.79 | 0.29 | 0.23 | **124.85** | 6.22 | *66.58* | **0.63** | **0.82** |
+
+</details>
+
+<details>
+<summary><b>RealSR</b></summary>
+
+| Method | PSNR ↑ | SSIM ↑ | LPIPS ↓ | DISTS ↓ | FID ↓ | NIQE ↓ | MUSIQ ↑ | MANIQA ↑ | CLIPIQA ↑ |
+|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|
+| BSRGAN | *26.38* | **0.77** | **0.27** | 0.21 | 141.24 | 5.64 | 63.28 | 0.54 | 0.51 |
+| Real-ESRGAN | **26.65** | *0.76* | *0.27* | **0.21** | 136.29 | 5.85 | 60.45 | 0.55 | 0.45 |
+| LDL | 25.28 | 0.76 | 0.28 | 0.21 | 142.74 | 5.99 | 60.92 | 0.55 | 0.46 |
+| FeMaSR | 25.06 | 0.74 | 0.29 | 0.23 | 141.01 | 5.77 | 59.05 | 0.49 | 0.54 |
+| StableSR | 24.62 | 0.70 | 0.31 | 0.22 | 128.54 | 5.78 | 65.48 | 0.62 | 0.62 |
+| SUPIR | 23.65 | 0.66 | 0.35 | 0.25 | 130.38 | 6.11 | 62.09 | 0.58 | 0.67 |
+| TSD-SR | 24.81 | 0.72 | 0.27 | 0.21 | *114.45* | **5.13** | *71.19* | 0.63 | 0.72 |
+| AddSR | 22.65 | 0.65 | 0.38 | 0.27 | 154.18 | 6.62 | **71.41** | **0.67** | *0.73* |
+| CCSR | 25.92 | 0.75 | 0.28 | 0.21 | 122.84 | 5.73 | 69.18 | 0.64 | 0.63 |
+| DiffBIR | 24.83 | 0.65 | 0.36 | 0.24 | 130.75 | 5.84 | 69.28 | 0.65 | 0.71 |
+| OSEDiff | 25.15 | 0.73 | 0.29 | 0.21 | 123.53 | 5.65 | 69.08 | 0.63 | 0.67 |
+| PASD | 26.04 | 0.74 | 0.28 | *0.21* | 135.48 | 5.71 | 60.03 | 0.56 | 0.51 |
+| ResShift | 25.66 | 0.74 | 0.33 | 0.25 | 128.03 | 8.07 | 56.89 | 0.51 | 0.54 |
+| SeeSR | 25.15 | 0.72 | 0.30 | 0.22 | 125.30 | *5.40* | 69.81 | 0.65 | 0.67 |
+| **ScaleResfusion (CLIPIQA tuned)** | 26.30 | 0.75 | 0.28 | 0.22 | **107.48** | 5.75 | 70.33 | *0.66* | **0.81** |
+
+</details>
+
+<details>
+<summary><b>DIV2K-Val</b></summary>
+
+| Method | PSNR ↑ | SSIM ↑ | LPIPS ↓ | DISTS ↓ | FID ↓ | NIQE ↓ | MUSIQ ↑ | MANIQA ↑ | CLIPIQA ↑ |
+|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|
+| BSRGAN | *24.58* | 0.63 | 0.35 | 0.23 | 49.55 | 4.75 | 61.68 | 0.50 | 0.54 |
+| Real-ESRGAN | 24.02 | **0.64** | 0.32 | 0.21 | 38.87 | 4.83 | 60.38 | 0.54 | 0.53 |
+| LDL | 23.83 | *0.63* | 0.33 | 0.22 | 42.28 | 4.86 | 60.04 | 0.53 | 0.52 |
+| FeMaSR | 22.45 | 0.59 | 0.34 | 0.22 | 41.97 | 4.87 | 57.94 | 0.48 | 0.58 |
+| StableSR | 23.27 | 0.57 | 0.31 | 0.20 | *24.95* | 4.77 | 65.78 | 0.62 | 0.68 |
+| SUPIR | 22.13 | 0.53 | 0.39 | 0.23 | 31.40 | 5.68 | 63.86 | 0.59 | 0.71 |
+| TSD-SR | 23.02 | 0.58 | **0.27** | **0.18** | 29.16 | **4.32** | **71.69** | 0.62 | 0.74 |
+| AddSR | 22.37 | 0.56 | 0.38 | 0.23 | 34.91 | 5.84 | 69.15 | 0.63 | *0.75* |
+| CCSR | 24.30 | 0.63 | 0.30 | 0.20 | 30.84 | 5.34 | 69.53 | 0.61 | 0.68 |
+| DiffBIR | 23.14 | 0.54 | 0.37 | 0.22 | 32.71 | 4.99 | *69.87* | *0.64* | 0.73 |
+| OSEDiff | 23.72 | 0.61 | 0.29 | 0.20 | 26.34 | *4.71* | 67.96 | 0.61 | 0.67 |
+| PASD | 24.01 | 0.61 | 0.38 | 0.22 | 37.06 | 4.98 | 63.75 | 0.55 | 0.60 |
+| ResShift | **24.59** | 0.62 | 0.31 | 0.21 | 30.81 | 6.92 | 58.90 | 0.53 | 0.57 |
+| SeeSR | 23.68 | 0.60 | 0.32 | 0.20 | 25.89 | 4.81 | 68.66 | 0.62 | 0.69 |
+| **ScaleResfusion (CLIPIQA tuned)** | 24.41 | 0.63 | *0.27* | *0.19* | **24.39** | 4.80 | 69.82 | **0.65** | **0.83** |
+
+</details>
+
+<details>
+<summary><b>LSDIR-Val</b></summary>
+
+| Method | PSNR ↑ | SSIM ↑ | LPIPS ↓ | DISTS ↓ | FID ↓ | NIQE ↓ | MUSIQ ↑ | MANIQA ↑ | CLIPIQA ↑ |
+|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|
+| BSRGAN | 20.82 | *0.54* | 0.25 | 0.16 | 46.37 | 4.21 | 68.94 | 0.63 | 0.42 |
+| Real-ESRGAN | 20.58 | **0.55** | 0.24 | 0.15 | *41.28* | 4.18 | 69.52 | 0.64 | 0.42 |
+| LDL | 20.31 | 0.53 | 0.25 | 0.16 | 44.75 | 4.36 | 68.61 | 0.64 | 0.40 |
+| FeMaSR | 19.87 | 0.51 | 0.27 | 0.17 | 48.63 | 4.09 | 67.85 | 0.61 | 0.46 |
+| StableSR | 20.31 | **0.55** | 0.31 | 0.18 | 54.76 | 5.07 | 62.96 | 0.61 | 0.58 |
+| SUPIR | 20.35 | 0.50 | 0.24 | 0.15 | 43.81 | 4.81 | 71.47 | 0.67 | *0.78* |
+| TSD-SR | 19.05 | 0.49 | **0.21** | *0.14* | 45.66 | *3.86* | **74.45** | *0.68* | 0.75 |
+| AddSR | 19.20 | 0.45 | 0.34 | 0.20 | 79.80 | 4.99 | *74.20* | **0.70** | 0.78 |
+| CCSR | 20.76 | 0.53 | 0.26 | 0.16 | 56.28 | 4.25 | 72.57 | 0.66 | 0.69 |
+| DiffBIR | 20.51 | 0.49 | 0.27 | 0.16 | 58.45 | 4.44 | 73.26 | *0.68* | 0.75 |
+| OSEDiff | 20.39 | 0.52 | 0.27 | 0.16 | 59.57 | 4.03 | 72.34 | 0.66 | 0.70 |
+| PASD | 20.93 | 0.52 | 0.31 | 0.17 | 59.11 | **3.80** | 69.29 | 0.62 | 0.64 |
+| ResShift | **21.23** | **0.55** | *0.23* | *0.14* | **38.98** | 5.32 | 68.56 | 0.61 | 0.65 |
+| SeeSR | 20.69 | 0.52 | 0.25 | 0.15 | 52.06 | 4.10 | 73.27 | *0.68* | 0.72 |
+| **ScaleResfusion (CLIPIQA tuned)** | *21.05* | **0.55** | **0.21** | **0.13** | 41.91 | 4.27 | 73.11 | *0.68* | **0.82** |
+
+</details>
 
 ## 🎓 Citation
 
