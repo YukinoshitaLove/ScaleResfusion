@@ -92,6 +92,7 @@ export HF_HOME=/path/to/your/hf_cache
 | FLUX.2-klein-base-4B | Frozen backbone (Apache-2.0), downloaded automatically from Hugging Face | [🤗 FLUX.2-klein-base-4B](https://huggingface.co/black-forest-labs/FLUX.2-klein-base-4B) |
 | ScaleResfusion-FLUX2-4B (w/o GAN) | LoRA adapter, fidelity-oriented variant (`gen_hq_transformer_lora.safetensors`) | [🤗 ScaleResfusion-4B (w/o GAN)](https://huggingface.co/flashszn/ScaleResfusion/tree/main/weights/4B) |
 | ScaleResfusion-FLUX2-4B (w/ GAN) | LoRA adapter, perception-oriented variant (`gen_hq_transformer_lora.safetensors`) | [🤗 ScaleResfusion-4B (w/ GAN)](https://huggingface.co/flashszn/ScaleResfusion/tree/main/weights/4B_gan) |
+| ScaleResfusion-FLUX2-4B (CLIPIQA tuned) | LoRA adapter fine-tuned using a CLIPIQA loss | [🤗 ScaleResfusion-4B (CLIPIQA tuned)](https://huggingface.co/flashszn/ScaleResfusion/tree/main/weights/4B_clipiqa) |
 | RAM | Tagging model used by DAPE (`ram_swin_large_14m.pth`) | [🤗 Recognize Anything](https://huggingface.co/spaces/xinyu1205/recognize-anything/blob/main/ram_swin_large_14m.pth) |
 | DAPE | Degradation-aware prompt extractor from [SeeSR](https://github.com/cswry/SeeSR); checkpoint as redistributed by [OSEDiff](https://github.com/cswry/OSEDiff) (`DAPE.pth`) | [Google Drive](https://drive.google.com/file/d/1KIV6VewwO2eDC9g4Gcvgm-a0LDI7Lmwm/view?usp=drive_link) |
 
@@ -161,6 +162,8 @@ python test_metrics.py \
 
 ## 📏 Results
 ### Download link
+
+Benchmark results are available on [🤗 Hugging Face](https://huggingface.co/flashszn/ScaleResfusion/tree/main/results).
 
 ```
 hf download flashszn/ScaleResfusion --include "results/*" --local-dir ./download
@@ -345,6 +348,8 @@ Separately trained 4-, 2- and 1-step FLUX.2-4B models on DRealSR. Even the 1-ste
 ## 📏 Results (CLIPIQA tuned)
 
 We fine-tuned our ScaleResfusion model using a CLIPIQA loss. The following tables compare the CLIPIQA-tuned **FLUX.2-klein-4B** model with other methods on DRealSR, RealSR, DIV2K-Val and LSDIR-Val.
+
+Download the [CLIPIQA-tuned weights](https://huggingface.co/flashszn/ScaleResfusion/tree/main/weights/4B_clipiqa) and [benchmark results](https://huggingface.co/flashszn/ScaleResfusion/tree/main/results) from Hugging Face.
 
 **Bold** = best, *italic* = second best within each table. ↑ higher is better, ↓ lower is better.
 
