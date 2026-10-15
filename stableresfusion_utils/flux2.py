@@ -1,3 +1,12 @@
+# ScaleResfusion - FLUX.2 helper functions.
+#
+# Functions marked "Copied from diffusers..." are derived from 🤗 Diffusers
+# (https://github.com/huggingface/diffusers), Copyright The HuggingFace Team, licensed under
+# the Apache License, Version 2.0 (http://www.apache.org/licenses/LICENSE-2.0), and may have
+# been modified. Those portions remain under the Apache License 2.0.
+# All other code in this file is licensed under the PolyForm Noncommercial License 1.0.0;
+# see the LICENSE file in the repository root.
+
 import torch
 from diffusers import Flux2KleinPipeline, AutoencoderKLFlux2
 
