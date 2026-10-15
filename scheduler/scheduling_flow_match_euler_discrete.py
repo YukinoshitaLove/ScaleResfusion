@@ -1,18 +1,19 @@
 # Copyright 2025 nkicsl. All rights reserved.
 #
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
+# Portions of this file are derived from 🤗 Diffusers
+# (https://github.com/huggingface/diffusers/blob/main/src/diffusers/schedulers/scheduling_flow_match_euler_discrete.py),
+# Copyright The HuggingFace Team, licensed under the Apache License, Version 2.0
+# (http://www.apache.org/licenses/LICENSE-2.0).
+# This file has been modified from the original: the Resfusion / Residual Rectified Flow
+# scheduling logic (e.g. `ResfusionFlowMatchScheduler`, `scale_noise_resfusion`) was added.
 #
-#     http://www.apache.org/licenses/LICENSE-2.0
+# The upstream Diffusers portions remain under the Apache License 2.0.
+# All modifications and additions by nkicsl and the ScaleResfusion authors are licensed
+# under the PolyForm Noncommercial License 1.0.0; see the LICENSE file in the repository root.
 #
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
-# DISCLAIMER: This file is based on https://github.com/huggingface/diffusers/blob/main/src/diffusers/schedulers/scheduling_flow_match_euler_discrete.py
+# The method implemented in this file is protected by Chinese Invention Patent
+# ZL 2026 1 1122958.7 (CN 122636463 B), owned by Nankai University.
+# Any commercial use requires prior written authorization; see LICENSE and README.md.
 
 import math
 from dataclasses import dataclass

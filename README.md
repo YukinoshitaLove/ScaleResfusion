@@ -27,7 +27,8 @@
 [![Project Page](https://img.shields.io/badge/Project-Page-4c6ef5.svg)](https://yukinoshitalove.github.io/ScaleResfusion/)
 [![Video](https://img.shields.io/badge/Video-Demo-e03131.svg)](https://mailnankaieducn-my.sharepoint.com/:v:/g/personal/shizhenning_mail_nankai_edu_cn/IQBoy3T-p6qTSLhhpoZn3KyFAaJA3kvdiBXgoGy2aa1AcQ8?e=GmWi7q)
 [![Weights](https://img.shields.io/badge/Weights-Download-f59f00.svg)](#-model-zoo)
-[![License](https://img.shields.io/badge/License-Apache%202.0-2f9e44.svg)](LICENSE)
+[![License](https://img.shields.io/badge/License-PolyForm%20Noncommercial%201.0.0-e8590c.svg)](LICENSE)
+[![Patent](https://img.shields.io/badge/Patent-ZL%202026%201%201122958.7-1971c2.svg)](#-license)
 
 <img src="docs/static/images/teaser.jpg" width="100%" alt="ScaleResfusion teaser">
 <p><i>Top: real-world low-quality inputs. Bottom: ScaleResfusion (FLUX.2-klein-4B backbone, 4 sampling steps).</i></p>
@@ -473,7 +474,15 @@ You may also be interested in our earlier residual diffusion work, [Resfusion](h
 
 ## 🎫 License
 
-This project is released under the [Apache 2.0 license](LICENSE). The FLUX.2-klein-base-4B backbone is distributed by Black Forest Labs under Apache 2.0; RAM and DAPE follow the licenses of their original repositories.
+**ScaleResfusion is source-available for non-commercial use only. Any commercial use requires prior written authorization.**
+
+- **License.** The source code in this repository is licensed under the [PolyForm Noncommercial License 1.0.0](LICENSE). You may use, modify and redistribute it for non-commercial purposes, such as academic research, teaching, personal study and evaluation, provided that you keep the [`LICENSE`](LICENSE) file and its `Required Notice` lines. This is **not** an OSI-approved open-source license.
+- **Patent.** The method implemented in this repository is protected by Chinese Invention Patent **ZL 2026 1 1122958.7** (Grant Publication No. **CN 122636463 B**; Patent Certificate No. **9331537**), *"一种基于残差校正流的图像修复方法及系统"* (Image Restoration Method and System Based on Residual Rectified Flow), owned by **Nankai University**.
+- **Commercial use.** Commercial use requires a separate written license **before** use. This includes integration into commercial products or services, use in paid or production environments, providing the software as a hosted service, and using it on behalf of a for-profit entity. For commercial licensing, please contact **shizhenning@mail.nankai.edu.cn**.
+- **Third-party components.** This repository includes third-party code under its own licenses (Apache-2.0, MIT, BSD-3-Clause and the non-commercial S-Lab License 1.0). See [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md). The FLUX.2-klein-base-4B backbone (Black Forest Labs, Apache-2.0), the RAM checkpoint and the DAPE checkpoint are downloaded separately and follow the licenses of their original repositories.
+- **Earlier releases.** Versions of this repository published before this license change (up to and including commit `092b7b6`) were distributed under the Apache License 2.0. The current terms apply to all versions published from this change onward.
+
+**许可说明（中文）**：本仓库代码采用 [PolyForm Noncommercial License 1.0.0](LICENSE) 许可，仅限学术研究、教学、个人学习与评估等**非商业用途**。本仓库实现的方法受中国发明专利保护（专利号 **ZL 2026 1 1122958.7**，授权公告号 **CN 122636463 B**，证书号第 **9331537** 号，专利权人：**南开大学**）。**任何商业用途**，包括集成到商业产品或服务、在付费或生产环境中使用、以托管服务形式提供，以及代表营利性机构使用，**均须事先获得书面授权**。商业授权请联系：**shizhenning@mail.nankai.edu.cn**。第三方组件的许可详见 [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md)。
 
 ## 🙏 Acknowledgements
 
