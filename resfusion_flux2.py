@@ -85,7 +85,9 @@ def initialize_transformer(pretrained_model_name_or_path, lora_rank=32, ckpt_fil
     transformer.requires_grad_(False)
 
     if ckpt_file is not None:
-        transformer.load_lora_adapter(ckpt_file, adapter_name="default_transformer")
+        transformer.load_lora_adapter(
+            ckpt_file, weight_name=os.path.basename(ckpt_file), adapter_name="default_transformer"
+        )
     else:
         target_modules = get_flux2_lora_target_modules(transformer)
         lora_conf = LoraConfig(
@@ -210,6 +212,7 @@ class Resfusion_flux2_test(nn.Module):
             )
 
         self.device = torch.device("cuda")
+        self.cpu_offload = getattr(args, "cpu_offload", False)
         self.weight_dtype = {
             "fp16": torch.float16,
             "bf16": torch.bfloat16,
@@ -219,16 +222,18 @@ class Resfusion_flux2_test(nn.Module):
         # generator: frozen VAE + LoRA-adapted transformer
         self.model = Resfusion_flux2_gen(args, ckpt_file=args.resfusion_path)
         self.model.eval()
-        self.model.to(self.device, dtype=self.weight_dtype)
+        model_device = torch.device("cpu") if self.cpu_offload else self.device
+        self.model.to(model_device, dtype=self.weight_dtype)
 
-        # text encoder (we only keep the tokenizer / text encoder of the pipeline)
         self.pipe = Flux2KleinPipeline.from_pretrained(
             args.pretrained_model_name_or_path,
+            transformer=None,
+            vae=None,
+            scheduler=None,
             torch_dtype=self.weight_dtype,
         )
-        del self.pipe.transformer, self.pipe.vae, self.pipe.scheduler
         self.pipe.text_encoder.eval()
-        self.pipe.to(self.device, dtype=self.weight_dtype)
+        self.pipe.to(model_device, dtype=self.weight_dtype)
 
         # autocast helper
         mixed_precision = "no" if args.mixed_precision == "fp32" else args.mixed_precision
@@ -236,14 +241,24 @@ class Resfusion_flux2_test(nn.Module):
 
     @torch.no_grad()
     def encode_prompt(self, prompt):
-        prompt_embeds, txt_ids = self.pipe.encode_prompt(prompt=prompt, device=self.device)
-        prompt_embeds = prompt_embeds.to(dtype=self.weight_dtype)
-        txt_ids = txt_ids.to(dtype=self.weight_dtype)
-        return prompt_embeds, txt_ids
+        if self.cpu_offload:
+            self.model.to("cpu")
+        try:
+            if self.cpu_offload:
+                self.pipe.to(self.device)
+            prompt_embeds, txt_ids = self.pipe.encode_prompt(prompt=prompt, device=self.device)
+            prompt_embeds = prompt_embeds.to(dtype=self.weight_dtype)
+            txt_ids = txt_ids.to(dtype=self.weight_dtype)
+            return prompt_embeds, txt_ids
+        finally:
+            if self.cpu_offload:
+                self.pipe.to("cpu")
 
     @torch.no_grad()
     def forward(self, lq, prompt):
         prompt_embeds, txt_ids = self.encode_prompt(prompt)
+        if self.cpu_offload:
+            self.model.to(self.device)
         lq = lq.to(device=self.device, dtype=self.weight_dtype)
         return self.model.resfusion_inference_loop(
             lq_image=lq,

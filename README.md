@@ -41,14 +41,17 @@ ScaleResfusion rewrites residual image restoration as a **scheduler-independent 
 
 ## 🔥 News
 
-- **[2026.09]** Inference code for the **FLUX.2-klein-4B** backbone is released. Pretrained LoRA weights and benchmark results are coming soon.
+- **[2026.10]** Added inference support for **SD3-medium (2B)**, **Z-Image (6B)** and **FLUX.2-klein-base-9B**. LoRA weights and benchmark results (w/o GAN and w/ GAN) for these three backbones are coming soon.
+- **[2026.09]** Released **FLUX.2-klein-4B** inference code, pretrained LoRA weights (w/o GAN and w/ GAN), benchmark results and DAPE captions.
 - **[2026.07]** The [paper](https://arxiv.org/abs/2607.25275) is on arXiv.
 
 ## 📋 Release Plan
 
 - [x] Inference code — FLUX.2-klein-4B
 - [x] Pretrained LoRA weights — FLUX.2-klein-4B (w/o GAN, w/ GAN) + benchmark results and DAPE captions
-- [ ] Inference code and weights — SD3 (2B), Z-Image (6B), FLUX.2-klein-9B
+- [x] Inference code — SD3-medium (2B), Z-Image (6B), FLUX.2-klein-base-9B
+- [ ] LoRA weights — SD3-medium (2B), Z-Image (6B), FLUX.2-klein-base-9B (w/o GAN, w/ GAN)
+- [ ] Benchmark outputs, DAPE captions and metric logs — SD3-medium (2B), Z-Image (6B), FLUX.2-klein-base-9B (w/o GAN, w/ GAN)
 - [ ] Training code
 
 ## 🎬 Overview
@@ -79,7 +82,11 @@ pip install torch torchvision --index-url https://download.pytorch.org/whl/cu130
 pip install -r requirements.txt
 ```
 
-The FLUX.2-klein pipeline requires `diffusers==0.37.0` and `transformers==5.3.0` (pinned in `requirements.txt`). Tested on Ubuntu 24.04 with a single NVIDIA RTX 5090 (32 GB): Python 3.10, `torch 2.14.0+cu130`, `diffusers 0.37.0`, `transformers 5.3.0`, `peft 0.18.1`, `accelerate 1.15.0`, `pyiqa 0.1.16`; 4-step inference of the 4B model uses about 17.5 GB of GPU memory and takes well under one second per 512×512 image. If Hugging Face is slow to reach, set a mirror and a cache directory before running any script:
+Tested on Ubuntu 24.04 with NVIDIA RTX 5090 (32 GB): Python 3.10, `torch 2.14.0+cu130`, `diffusers 0.37.0`, `transformers 5.3.0`, `peft 0.18.1`, `accelerate 1.15.0` and `pyiqa 0.1.16`. Core dependency versions are pinned in `requirements.txt`.
+
+For **9B on a 32 GB GPU**, add `--cpu_offload` to keep inactive components in CPU memory. Omit this flag when GPU memory is sufficient.
+
+If Hugging Face is slow to reach, set a mirror and a cache directory before running any script:
 
 ```bash
 export HF_ENDPOINT=https://hf-mirror.com
@@ -90,10 +97,19 @@ export HF_HOME=/path/to/your/hf_cache
 
 | Model | Description | Download |
 |:---|:---|:---|
+| SD3-medium (2B) | Frozen backbone (gated access) | [🤗 SD3-medium](https://huggingface.co/stabilityai/stable-diffusion-3-medium-diffusers) |
 | FLUX.2-klein-base-4B | Frozen backbone (Apache-2.0), downloaded automatically from Hugging Face | [🤗 FLUX.2-klein-base-4B](https://huggingface.co/black-forest-labs/FLUX.2-klein-base-4B) |
+| Z-Image (6B) | Frozen backbone (Apache-2.0) | [🤗 Z-Image](https://huggingface.co/Tongyi-MAI/Z-Image) |
+| FLUX.2-klein-base-9B | Frozen backbone (FLUX Non-Commercial License) | [🤗 FLUX.2-klein-base-9B](https://huggingface.co/black-forest-labs/FLUX.2-klein-base-9B) |
 | ScaleResfusion-FLUX2-4B (w/o GAN) | LoRA adapter, fidelity-oriented variant (`gen_hq_transformer_lora.safetensors`) | [🤗 ScaleResfusion-4B (w/o GAN)](https://huggingface.co/flashszn/ScaleResfusion/tree/main/weights/4B) |
 | ScaleResfusion-FLUX2-4B (w/ GAN) | LoRA adapter, perception-oriented variant (`gen_hq_transformer_lora.safetensors`) | [🤗 ScaleResfusion-4B (w/ GAN)](https://huggingface.co/flashszn/ScaleResfusion/tree/main/weights/4B_gan) |
 | ScaleResfusion-FLUX2-4B (CLIPIQA tuned) | LoRA adapter fine-tuned using a CLIPIQA loss | [🤗 ScaleResfusion-4B (CLIPIQA tuned)](https://huggingface.co/flashszn/ScaleResfusion/tree/main/weights/4B_clipiqa) |
+| ScaleResfusion-SD3-2B (w/o GAN) | LoRA adapter for SD3-medium | **Coming soon** |
+| ScaleResfusion-SD3-2B (w/ GAN) | LoRA adapter for SD3-medium | **Coming soon** |
+| ScaleResfusion-ZImage-6B (w/o GAN) | LoRA adapter for Z-Image | **Coming soon** |
+| ScaleResfusion-ZImage-6B (w/ GAN) | LoRA adapter for Z-Image | **Coming soon** |
+| ScaleResfusion-FLUX2-9B (w/o GAN) | LoRA adapter for FLUX.2-klein-base-9B | **Coming soon** |
+| ScaleResfusion-FLUX2-9B (w/ GAN) | LoRA adapter for FLUX.2-klein-base-9B | **Coming soon** |
 | RAM | Tagging model used by DAPE (`ram_swin_large_14m.pth`) | [🤗 Recognize Anything](https://huggingface.co/spaces/xinyu1205/recognize-anything/blob/main/ram_swin_large_14m.pth) |
 | DAPE | Degradation-aware prompt extractor from [SeeSR](https://github.com/cswry/SeeSR); checkpoint as redistributed by [OSEDiff](https://github.com/cswry/OSEDiff) (`DAPE.pth`) | [Google Drive](https://drive.google.com/file/d/1KIV6VewwO2eDC9g4Gcvgm-a0LDI7Lmwm/view?usp=drive_link) |
 
@@ -114,7 +130,7 @@ test_LR/
     └── ...
 ```
 
-Generate the caption files with DAPE (RAM + LoRA) — this is the same prompt extractor used in the paper:
+Generate the caption files with DAPE (RAM + LoRA) — this is the same prompt extractor used in the paper. **All backbones share this script and the same `test_LR/txt/` caption directory**:
 
 ```bash
 python generate_captions.py \
@@ -123,7 +139,7 @@ python generate_captions.py \
     --ram_ft_path /path/to/DAPE.pth
 ```
 
-The benchmark captions used for our released results are produced by exactly this script (DAPE run on the ×4-upsampled LQ image), and they will be released together with the checkpoints. If you only want a quick try without RAM/DAPE, pass `--prompt ""` (or any fixed prompt) to the inference script and it will be used for images that have no caption file.
+The existing 4B benchmark assets are linked in [Results](#-results). Captions and outputs for the new backbones remain pending release. Benchmark captions use this script (DAPE run on the ×4-upsampled LQ image). If you only want a quick try without RAM/DAPE, pass `--prompt ""` (or any fixed prompt) to the inference script and it will be used for images that have no caption file.
 
 ### 2. Run ScaleResfusion (FLUX.2-klein-4B, 4 steps)
 
@@ -135,7 +151,7 @@ python test_resfusion_flux2.py \
     --pretrained_model_name_or_path black-forest-labs/FLUX.2-klein-base-4B
 ```
 
-Restored images are written to `--output_dir` (the prompt of every image is also saved to `--output_dir/txt/`). Key options:
+Restored images are written to `--output_dir` (the prompt of every image is also saved to `--output_dir/txt/`). Key options for the **4B command** (model-specific defaults are listed in the next section):
 
 | Argument | Default | Meaning |
 |:---|:---|:---|
@@ -148,7 +164,38 @@ Restored images are written to `--output_dir` (the prompt of every image is also
 | `--prompt` | `None` | Fallback prompt for images without a caption file. |
 | `--seed` | `42` | Random seed of the initial noise. |
 
-### 3. Evaluate
+### 3. Other backbones
+
+Use the entry point and LoRA adapter for your backbone. For 9B, explicitly select the base model as shown below.
+
+| Backbone | Entry point | Default base model ID | Default precision |
+|:---|:---|:---|:---|
+| SD3-medium (2B) | `test_resfusion_sd3.py` | `stabilityai/stable-diffusion-3-medium-diffusers` | `fp16` |
+| Z-Image (6B, undistilled; not Turbo) | `test_resfusion_zimage.py` | `Tongyi-MAI/Z-Image` | `bf16` |
+| FLUX.2-klein-base-9B | `test_resfusion_flux2.py` | Runner still defaults to **4B**; explicitly select `black-forest-labs/FLUX.2-klein-base-9B` | `fp16` |
+
+```bash
+# SD3-medium (2B)
+python test_resfusion_sd3.py \
+    --input_image test_LR --output_dir results/test_LR_sd3_2b \
+    --resfusion_path /path/to/2B/gen_hq_transformer_lora.safetensors
+
+# Z-Image (6B, undistilled)
+python test_resfusion_zimage.py \
+    --input_image test_LR --output_dir results/test_LR_zimage_6b \
+    --resfusion_path /path/to/6B/gen_hq_transformer_lora.safetensors
+
+# FLUX.2-klein-base-9B (32 GB GPU)
+python test_resfusion_flux2.py \
+    --input_image test_LR --output_dir results/test_LR_flux2_9b \
+    --resfusion_path /path/to/9B/gen_hq_transformer_lora.safetensors \
+    --pretrained_model_name_or_path black-forest-labs/FLUX.2-klein-base-9B \
+    --mixed_precision fp16 --cpu_offload
+```
+
+All runners share the captions and image I/O settings above. With `--rsr 1.0`, `--flowT 20 / 10 / 6` gives **4 / 2 / 1 sampling steps**. Each SD3 or Z-Image step includes a ReferenceNet writer and reader pass.
+
+### 4. Evaluate
 
 We follow the [StableSR](https://github.com/IceClear/StableSR) protocol on DIV2K-Val, RealSR and DRealSR ([test sets](https://huggingface.co/datasets/Iceclear/StableSR-TestSets)), and additionally use a harder LSDIR-Val benchmark built by centre-cropping 512×512 patches from the LSDIR validation split. `test_metrics.py` reports PSNR, SSIM, LPIPS, DISTS, FID, NIQE, MUSIQ and MANIQA:
 
@@ -159,16 +206,37 @@ python test_metrics.py \
     --log      results/DrealSR_scaleresfusion
 ```
 
-`scripts/inference_flux2_4b.sh` chains captioning, inference and evaluation for one benchmark split.
+The benchmark wrappers chain captioning, inference and evaluation for one split:
+
+| Backbone | Wrapper |
+|:---|:---|
+| FLUX.2-klein-4B | `scripts/inference_flux2_4b.sh` |
+| SD3-medium (2B) | `scripts/inference_sd3_2b.sh` |
+| Z-Image (6B) | `scripts/inference_zimage_6b.sh` |
+| FLUX.2-klein-base-9B | `scripts/inference_flux2_9b.sh` |
+
+All four use the same six positional arguments (the last two supply captioning weights):
+
+```text
+bash scripts/inference_<backbone>.sh <LR_DIR> <HR_DIR> <OUT_DIR> <GEN_CHECKPOINT> [RAM_PTH] [DAPE_PTH]
+```
+
+Provide DAPE captions in `<LR_DIR>/txt/`, or pass both `RAM_PTH` and `DAPE_PTH` to generate them. Caption generation writes to `<LR_DIR>/txt/`.
 
 ## 📏 Results
 ### Download link
 
-Benchmark results are available on [🤗 Hugging Face](https://huggingface.co/flashszn/ScaleResfusion/tree/main/results).
+FLUX.2-klein-4B benchmark results are available on [🤗 Hugging Face](https://huggingface.co/flashszn/ScaleResfusion/tree/main/results).
 
-```
+```bash
 hf download flashszn/ScaleResfusion --include "results/*" --local-dir ./download
 ```
+
+| Backbone | w/o GAN results | w/ GAN results |
+|:---|:---|:---|
+| SD3-medium (2B) | **Coming soon** | **Coming soon** |
+| Z-Image (6B) | **Coming soon** | **Coming soon** |
+| FLUX.2-klein-base-9B | **Coming soon** | **Coming soon** |
 
 All numbers in this section are from the paper. Unless stated otherwise, *Ours* uses the default **FLUX.2-klein-4B** backbone and **4 sampling steps**. **Bold** = best, *italic* = second best. ↑ higher is better, ↓ lower is better.
 
@@ -479,7 +547,8 @@ You may also be interested in our earlier residual diffusion work, [Resfusion](h
 - **License.** The source code in this repository is licensed under the [PolyForm Noncommercial License 1.0.0](LICENSE). You may use, modify and redistribute it for non-commercial purposes, such as academic research, teaching, personal study and evaluation, provided that you keep the [`LICENSE`](LICENSE) file and its `Required Notice` lines. This is **not** an OSI-approved open-source license.
 - **Patent.** The method implemented in this repository is protected by Chinese Invention Patent **ZL 2026 1 1122958.7** (Grant Publication No. **CN 122636463 B**; Patent Certificate No. **9331537**), *"一种基于残差校正流的图像修复方法及系统"* (Image Restoration Method and System Based on Residual Rectified Flow), owned by **Nankai University**.
 - **Commercial use.** Commercial use requires a separate written license **before** use. This includes integration into commercial products or services, use in paid or production environments, providing the software as a hosted service, and using it on behalf of a for-profit entity. For commercial licensing, please contact **shizhenning@mail.nankai.edu.cn**.
-- **Third-party components.** This repository includes third-party code under its own licenses (Apache-2.0, MIT, BSD-3-Clause and the non-commercial S-Lab License 1.0). See [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md). The FLUX.2-klein-base-4B backbone (Black Forest Labs, Apache-2.0), the RAM checkpoint and the DAPE checkpoint are downloaded separately and follow the licenses of their original repositories.
+- **Third-party components.** Upstream code retains its own licenses (Apache-2.0, MIT, BSD-3-Clause and the non-commercial S-Lab License 1.0); ScaleResfusion modifications follow [`LICENSE`](LICENSE). This includes the Diffusers-derived SD3 / Z-Image ReferenceNet and attention modules. See [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md).
+- **Model weights.** Backbone, RAM and DAPE weights are downloaded separately under their original licenses. See [Third-Party Notices](THIRD_PARTY_NOTICES.md#4-separately-downloaded-components) for model sources and license links.
 - **Earlier releases.** Versions of this repository published before this license change (up to and including commit `092b7b6`) were distributed under the Apache License 2.0. The current terms apply to all versions published from this change onward.
 
 **许可说明（中文）**：本仓库代码采用 [PolyForm Noncommercial License 1.0.0](LICENSE) 许可，仅限学术研究、教学、个人学习与评估等**非商业用途**。本仓库实现的方法受中国发明专利保护（专利号 **ZL 2026 1 1122958.7**，授权公告号 **CN 122636463 B**，证书号第 **9331537** 号，专利权人：**南开大学**）。**任何商业用途**，包括集成到商业产品或服务、在付费或生产环境中使用、以托管服务形式提供，以及代表营利性机构使用，**均须事先获得书面授权**。商业授权请联系：**shizhenning@mail.nankai.edu.cn**。第三方组件的许可详见 [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md)。
