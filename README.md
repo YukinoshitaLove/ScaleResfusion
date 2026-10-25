@@ -50,7 +50,7 @@ ScaleResfusion rewrites residual image restoration as a **scheduler-independent 
 - [x] Inference code — FLUX.2-klein-4B
 - [x] Pretrained LoRA weights — FLUX.2-klein-4B (w/o GAN, w/ GAN) + benchmark results and DAPE captions
 - [x] Inference code — SD3-medium (2B), Z-Image (6B), FLUX.2-klein-base-9B
-- [ ] LoRA weights — SD3-medium (2B), Z-Image (6B), FLUX.2-klein-base-9B (w/o GAN, w/ GAN)
+- [x] LoRA weights — SD3-medium (2B), Z-Image (6B), FLUX.2-klein-base-9B (w/o GAN, w/ GAN)
 - [ ] Benchmark outputs, DAPE captions and metric logs — SD3-medium (2B), Z-Image (6B), FLUX.2-klein-base-9B (w/o GAN, w/ GAN)
 - [ ] Training code
 
@@ -104,12 +104,12 @@ export HF_HOME=/path/to/your/hf_cache
 | ScaleResfusion-FLUX2-4B (w/o GAN) | LoRA adapter, fidelity-oriented variant (`gen_hq_transformer_lora.safetensors`) | [🤗 ScaleResfusion-4B (w/o GAN)](https://huggingface.co/flashszn/ScaleResfusion/tree/main/weights/4B) |
 | ScaleResfusion-FLUX2-4B (w/ GAN) | LoRA adapter, perception-oriented variant (`gen_hq_transformer_lora.safetensors`) | [🤗 ScaleResfusion-4B (w/ GAN)](https://huggingface.co/flashszn/ScaleResfusion/tree/main/weights/4B_gan) |
 | ScaleResfusion-FLUX2-4B (CLIPIQA tuned) | LoRA adapter fine-tuned using a CLIPIQA loss | [🤗 ScaleResfusion-4B (CLIPIQA tuned)](https://huggingface.co/flashszn/ScaleResfusion/tree/main/weights/4B_clipiqa) |
-| ScaleResfusion-SD3-2B (w/o GAN) | LoRA adapter for SD3-medium | **Coming soon** |
-| ScaleResfusion-SD3-2B (w/ GAN) | LoRA adapter for SD3-medium | **Coming soon** |
-| ScaleResfusion-ZImage-6B (w/o GAN) | LoRA adapter for Z-Image | **Coming soon** |
-| ScaleResfusion-ZImage-6B (w/ GAN) | LoRA adapter for Z-Image | **Coming soon** |
-| ScaleResfusion-FLUX2-9B (w/o GAN) | LoRA adapter for FLUX.2-klein-base-9B | **Coming soon** |
-| ScaleResfusion-FLUX2-9B (w/ GAN) | LoRA adapter for FLUX.2-klein-base-9B | **Coming soon** |
+| ScaleResfusion-SD3-2B (w/o GAN) | LoRA adapter for SD3-medium | [🤗 ScaleResfusion-2B (w/o GAN)](https://huggingface.co/flashszn/ScaleResfusion/tree/main/weights/SD3) |
+| ScaleResfusion-SD3-2B (w/ GAN) | LoRA adapter for SD3-medium | [🤗 ScaleResfusion-2B (w/ GAN)](https://huggingface.co/flashszn/ScaleResfusion/tree/main/weights/SD3_gan) |
+| ScaleResfusion-ZImage-6B (w/o GAN) | LoRA adapter for Z-Image | [🤗 ScaleResfusion-6B (w/o GAN)](https://huggingface.co/flashszn/ScaleResfusion/tree/main/weights/ZImage) |
+| ScaleResfusion-ZImage-6B (w/ GAN) | LoRA adapter for Z-Image | [🤗 ScaleResfusion-6B (w/ GAN)](https://huggingface.co/flashszn/ScaleResfusion/tree/main/weights/ZImage_gan) |
+| ScaleResfusion-FLUX2-9B (w/o GAN) | LoRA adapter for FLUX.2-klein-base-9B | [🤗 ScaleResfusion-9B (w/o GAN)](https://huggingface.co/flashszn/ScaleResfusion/tree/main/weights/9B) |
+| ScaleResfusion-FLUX2-9B (w/ GAN) | LoRA adapter for FLUX.2-klein-base-9B | [🤗 ScaleResfusion-9B (w/ GAN)](https://huggingface.co/flashszn/ScaleResfusion/tree/main/weights/9B_gan) |
 | RAM | Tagging model used by DAPE (`ram_swin_large_14m.pth`) | [🤗 Recognize Anything](https://huggingface.co/spaces/xinyu1205/recognize-anything/blob/main/ram_swin_large_14m.pth) |
 | DAPE | Degradation-aware prompt extractor from [SeeSR](https://github.com/cswry/SeeSR); checkpoint as redistributed by [OSEDiff](https://github.com/cswry/OSEDiff) (`DAPE.pth`) | [Google Drive](https://drive.google.com/file/d/1KIV6VewwO2eDC9g4Gcvgm-a0LDI7Lmwm/view?usp=drive_link) |
 
@@ -226,17 +226,12 @@ Provide DAPE captions in `<LR_DIR>/txt/`, or pass both `RAM_PTH` and `DAPE_PTH` 
 ## 📏 Results
 ### Download link
 
-FLUX.2-klein-4B benchmark results are available on [🤗 Hugging Face](https://huggingface.co/flashszn/ScaleResfusion/tree/main/results).
+All results are available on [🤗 Hugging Face](https://huggingface.co/flashszn/ScaleResfusion/tree/main/results).
 
 ```bash
 hf download flashszn/ScaleResfusion --include "results/*" --local-dir ./download
 ```
 
-| Backbone | w/o GAN results | w/ GAN results |
-|:---|:---|:---|
-| SD3-medium (2B) | **Coming soon** | **Coming soon** |
-| Z-Image (6B) | **Coming soon** | **Coming soon** |
-| FLUX.2-klein-base-9B | **Coming soon** | **Coming soon** |
 
 All numbers in this section are from the paper. Unless stated otherwise, *Ours* uses the default **FLUX.2-klein-4B** backbone and **4 sampling steps**. **Bold** = best, *italic* = second best. ↑ higher is better, ↓ lower is better.
 
