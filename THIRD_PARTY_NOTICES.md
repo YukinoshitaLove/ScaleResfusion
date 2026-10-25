@@ -2,9 +2,7 @@
 
 ScaleResfusion is licensed under the PolyForm Noncommercial License 1.0.0 (see [`LICENSE`](LICENSE)). The method it implements is protected by Chinese Invention Patent ZL 2026 1 1122958.7 (CN 122636463 B; Patent Certificate No. 9331537), owned by Nankai University.
 
-This repository also contains code written by third parties. **Those portions are not licensed under the PolyForm Noncommercial License by the ScaleResfusion licensor; they remain under their original licenses**, listed below and reproduced in full at the end of this file. Where a file combines third-party code with ScaleResfusion modifications, the third-party portions remain under the original license and the ScaleResfusion modifications are licensed under [`LICENSE`](LICENSE).
-
-A commercial license from the ScaleResfusion licensor covers only the ScaleResfusion code and the patent rights held by the patentee. It does **not** grant rights to third-party code beyond what that code's own license allows. In particular, see the **non-commercial restriction** in section 3.
+Third-party components retain the licenses listed below. Full license texts are provided in the appendices.
 
 ## 1. Summary
 
@@ -18,35 +16,45 @@ A commercial license from the ScaleResfusion licensor covers only the ScaleResfu
 | `ram/models/utils.py` (asymmetric loss, marked "copy from ASL") | [ASL](https://github.com/Alibaba-MIIL/ASL), Copyright (c) 2020 Alibaba-MIIL | MIT License | Permitted by the component license |
 | `scheduler/scheduling_flow_match_euler_discrete.py` (upstream portions) | [🤗 Diffusers](https://github.com/huggingface/diffusers) `FlowMatchEulerDiscreteScheduler`, Copyright The HuggingFace Team | Apache License 2.0 | Upstream portions: permitted by the component license. ScaleResfusion / Resfusion modifications: see [`LICENSE`](LICENSE) |
 | `stableresfusion_utils/flux2.py` (functions marked "Copied from diffusers") | [🤗 Diffusers](https://github.com/huggingface/diffusers), Copyright The HuggingFace Team | Apache License 2.0 | Upstream portions: permitted by the component license |
+| `ReferenceNet_Modules/sd3_referencenet.py`, `ReferenceNet_Modules/sd3_reference_transformer.py`, `Reference_Atten/sd3_reference_attn_processor.py` (upstream-derived portions) | [🤗 Diffusers](https://github.com/huggingface/diffusers) SD3 transformer / attention code, Copyright The HuggingFace Team; adapted for ScaleResfusion | Apache License 2.0 | Upstream portions: permitted by the component license. ScaleResfusion modifications: see [`LICENSE`](LICENSE) |
+| `ReferenceNet_Modules/zimage_referencenet.py` (upstream-derived portions) | [🤗 Diffusers](https://github.com/huggingface/diffusers) Z-Image transformer code, **Copyright 2025 Alibaba Z-Image Team and The HuggingFace Team**; adapted for ScaleResfusion | Apache License 2.0 | Upstream portions: permitted by the component license. ScaleResfusion modifications: see [`LICENSE`](LICENSE) |
 | `my_utils/wavelet_color_fix.py` | Colour-fix script by Li Yi, [sd-webui-stablesr](https://github.com/pkuliyi2015/sd-webui-stablesr/blob/master/srmodule/colorfix.py), derived from [StableSR](https://github.com/IceClear/StableSR), Copyright 2022 S-Lab | **S-Lab License 1.0 (non-commercial only)** | **Not permitted** without permission from the S-Lab copyright holder(s); see section 3 |
 
-All other files in this repository are original ScaleResfusion code and are licensed under [`LICENSE`](LICENSE).
+ScaleResfusion code and modifications are licensed under [`LICENSE`](LICENSE).
 
 ## 2. Apache License 2.0 components
 
 The components marked "Apache License 2.0" above are redistributed under the Apache License, Version 2.0 (full text in [Appendix A](#appendix-a-apache-license-20)). As required by Section 4 of that license:
 
 - the original copyright, patent, trademark and attribution notices in these files are retained;
-- files that have been modified from the upstream version (`ram/models/*_lora.py`, `scheduler/scheduling_flow_match_euler_discrete.py`, and the copied functions in `stableresfusion_utils/flux2.py`) are identified here as modified files;
-- none of the upstream projects listed above ships a `NOTICE` file.
+- modified upstream files include `ram/models/*_lora.py`, `scheduler/scheduling_flow_match_euler_discrete.py`, the copied functions in `stableresfusion_utils/flux2.py`, `ReferenceNet_Modules/sd3_referencenet.py`, `ReferenceNet_Modules/sd3_reference_transformer.py`, `ReferenceNet_Modules/zimage_referencenet.py`, and `Reference_Atten/sd3_reference_attn_processor.py`.
 
 Copyright notices:
 
 - Recognize Anything (RAM / Tag2Text): Copyright (c) 2022 OPPO.
 - SeeSR / OSEDiff (DAPE): Copyright the SeeSR and OSEDiff authors.
 - 🤗 Diffusers: Copyright The HuggingFace Team. All rights reserved.
+- Diffusers Z-Image transformer: Copyright 2025 Alibaba Z-Image Team and The HuggingFace Team.
 - 🤗 Transformers: Copyright 2018- The Hugging Face team. All rights reserved.
 - timm (PyTorch Image Models): Copyright 2019 Ross Wightman.
 
 ## 3. Non-commercial component: `my_utils/wavelet_color_fix.py`
 
-`my_utils/wavelet_color_fix.py` is licensed under the **S-Lab License 1.0**, which permits redistribution and use **only for non-commercial purposes** (full text in [Appendix D](#appendix-d-s-lab-license-10)). The ScaleResfusion licensor cannot grant commercial rights to this file. A commercial user must either obtain permission from the S-Lab copyright holder(s) or replace this file with an implementation that is not subject to the S-Lab License.
+`my_utils/wavelet_color_fix.py` uses the **S-Lab License 1.0** for non-commercial use (full text in [Appendix D](#appendix-d-s-lab-license-10)). Commercial use requires permission from the S-Lab copyright holder(s).
 
-## 4. Components that are not included in this repository
+## 4. Separately downloaded components
 
-The following are downloaded separately by the user. They are not redistributed here and are governed solely by their own licenses:
+Backbone weights are downloaded separately. Their sources, licenses and access requirements are listed below:
 
-- FLUX.2-klein-base-4B backbone weights (Black Forest Labs, Apache License 2.0), via Hugging Face.
+| Base model ID | Model source | License / access |
+|---|---|---|
+| `stabilityai/stable-diffusion-3-medium-diffusers` | [SD3-medium](https://huggingface.co/stabilityai/stable-diffusion-3-medium-diffusers) | [Stability AI Non-Commercial Research Community License](https://huggingface.co/stabilityai/stable-diffusion-3-medium/blob/main/LICENSE). Gated access. |
+| `Tongyi-MAI/Z-Image` | [Z-Image](https://huggingface.co/Tongyi-MAI/Z-Image), undistilled base model | **Apache License 2.0**. |
+| `black-forest-labs/FLUX.2-klein-base-4B` | [FLUX.2-klein-base-4B](https://huggingface.co/black-forest-labs/FLUX.2-klein-base-4B) | **Apache License 2.0**. |
+| `black-forest-labs/FLUX.2-klein-base-9B` | [FLUX.2-klein-base-9B](https://huggingface.co/black-forest-labs/FLUX.2-klein-base-9B) | [FLUX Non-Commercial License](https://huggingface.co/black-forest-labs/FLUX.2-klein-base-9B/blob/main/LICENSE.md). |
+
+Other separately obtained components:
+
 - RAM checkpoint `ram_swin_large_14m.pth` ([Recognize Anything](https://github.com/xinyu1205/recognize-anything), Apache License 2.0).
 - DAPE checkpoint `DAPE.pth` ([SeeSR](https://github.com/cswry/SeeSR) / [OSEDiff](https://github.com/cswry/OSEDiff), Apache License 2.0).
 - Python dependencies listed in `requirements.txt` (PyTorch, diffusers, transformers, peft, accelerate, pyiqa, etc.), each under its own license.

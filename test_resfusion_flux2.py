@@ -1,4 +1,4 @@
-"""ScaleResfusion inference with the FLUX.2-klein-4B backbone.
+"""ScaleResfusion inference with the FLUX.2-klein-4B or 9B backbone.
 
 Example
 -------
@@ -24,6 +24,8 @@ from accelerate.utils import set_seed
 from PIL import Image
 from torchvision import transforms
 
+from my_utils.captions import get_caption_path, load_caption
+from my_utils.image_io import restored_tensor_to_pil
 from my_utils.preprocess import list_images, prepare_input_image
 from my_utils.wavelet_color_fix import adain_color_fix, wavelet_color_fix
 from resfusion_flux2 import Resfusion_flux2_test
@@ -31,28 +33,8 @@ from resfusion_flux2 import Resfusion_flux2_test
 tensor_transforms = transforms.Compose([transforms.ToTensor()])
 
 
-def get_caption_path(input_dir, image_path):
-    """Caption rule: ``{input_dir}/txt/{image_stem}.txt``."""
-    stem = os.path.splitext(os.path.basename(image_path))[0]
-    return os.path.join(input_dir, "txt", f"{stem}.txt")
-
-
-def load_caption(input_dir, image_path, fallback_prompt=None):
-    txt_path = get_caption_path(input_dir, image_path)
-    if os.path.exists(txt_path):
-        with open(txt_path, "r", encoding="utf-8") as f:
-            return f.read().strip()
-    if fallback_prompt is not None:
-        return fallback_prompt
-    raise FileNotFoundError(
-        f"Caption file not found: {txt_path}\n"
-        "Generate captions with `python generate_captions.py -i <input_dir> ...`, "
-        "or pass --prompt to use a fixed prompt for images without a caption file."
-    )
-
-
 def parse_args():
-    parser = argparse.ArgumentParser(description="ScaleResfusion (FLUX.2-klein-4B) inference")
+    parser = argparse.ArgumentParser(description="ScaleResfusion (FLUX.2-klein-4B/9B) inference")
     # I/O
     parser.add_argument("--input_image", "-i", type=str, required=True,
                         help="directory of LQ images (or a single image file)")
@@ -85,6 +67,9 @@ def parse_args():
     # precision setting
     parser.add_argument("--mixed_precision", type=str, choices=["fp16", "bf16", "fp32"],
                         default="fp16")
+    parser.add_argument("--cpu_offload", action="store_true",
+                        help="alternate text encoding and restoration on CUDA while keeping the "
+                             "inactive component on CPU (recommended for 9B on a 32 GB GPU)")
     return parser.parse_args()
 
 
@@ -127,7 +112,7 @@ def main():
             lq = tensor_transforms(input_image).unsqueeze(0).to("cuda")
             lq = lq * 2 - 1
             output_image = model(lq, prompt=caption)
-            output_pil = transforms.ToPILImage()(output_image[0].cpu() * 0.5 + 0.5)
+            output_pil = restored_tensor_to_pil(output_image[0])
 
             if args.align_method == "adain":
                 output_pil = adain_color_fix(target=output_pil, source=input_image)

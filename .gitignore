@@ -9,6 +9,12 @@ venv/
 .idea/
 .vscode/
 .claude/
+claude-code-tmp/
+
+# Internal release handoff and verification metadata
+/docs/RELEASE_ASSETS.md
+/SOURCE_MANIFEST.json
+/REFERENCE_MANIFEST.json
 
 # Model weights / checkpoints
 *.safetensors
